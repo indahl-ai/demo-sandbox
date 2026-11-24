@@ -41,21 +41,25 @@ md("""## 1. Replay a recorded result (no key, no IBM time)
 Re-analyzes the recorded hardware counts and prints the full output, then a RESULT box that restates the headline in plain words."""),
 code("""sandbox(DEMO, 'replay', '--chip', CHIP, '--run', str(RUN))"""),
 md("""## 2. Live run on your own IBM Quantum account (optional)
-Enter the API key when asked. It is held in this session only: not shown, not printed, not saved. If the key has more than one IBM instance, `check` lists them with the time left on each: put the name in `INSTANCE` and run the cell again."""),
-code("""from getpass import getpass
-if not os.environ.get('IBM_QUANTUM_TOKEN'): os.environ['IBM_QUANTUM_TOKEN'] = getpass('IBM Quantum API key: ')
+Set `LIVE = True` in the next cell and run it. Enter the API key when asked. It is held in this session only: not shown, not printed, not saved. If the key has more than one IBM instance, `check` lists them with the time left on each: put the name in `INSTANCE` and run the cell again."""),
+code("""LIVE = False          # change to True to use your own IBM Quantum account
 INSTANCE = ''          # only if asked, for example 'my-instance'
-if INSTANCE: os.environ['DEMO_INSTANCE'] = INSTANCE
-sandbox(DEMO, 'check', '--chip', CHIP)   # remaining IBM time and the estimate. Submits nothing."""),
+if LIVE:
+    from getpass import getpass
+    if not os.environ.get('IBM_QUANTUM_TOKEN'): os.environ['IBM_QUANTUM_TOKEN'] = getpass('IBM Quantum API key: ')
+    if INSTANCE: os.environ['DEMO_INSTANCE'] = INSTANCE
+    sandbox(DEMO, 'check', '--chip', CHIP)   # remaining IBM time and the estimate. Submits nothing.
+else:
+    print('Live run is off. Set LIVE = True in this cell and run it again to use your own IBM Quantum account.')"""),
 md("""### Fire
 Submits the jobs on your IBM account and uses your IBM time (see the estimate above). Change `False` to `True` to confirm."""),
 code("""USE_MY_IBM_TIME = False
-if USE_MY_IBM_TIME: sandbox(DEMO, 'fire', '--chip', CHIP, '--yes')
-else: print('Not submitted. Set USE_MY_IBM_TIME = True to submit.')"""),
+if LIVE and USE_MY_IBM_TIME: sandbox(DEMO, 'fire', '--chip', CHIP, '--yes')
+else: print('Not submitted. Set LIVE = True above and USE_MY_IBM_TIME = True here to submit.')"""),
 md("""### Collect and compare
 Checks the jobs every 30 seconds and prints the comparison when they finish (usually a few minutes, longer if the chip has a queue)."""),
 code("""import time
-for i in range(60):
+for i in range(60 if LIVE and USE_MY_IBM_TIME else 0):
     out = subprocess.run([PY, 'sandbox.py', DEMO, 'fetch', '--chip', CHIP], capture_output=True, text=True).stdout
     print(time.strftime('%H:%M:%S'), out.strip().splitlines()[-1] if out.strip() else '')
     res = subprocess.run([PY, 'sandbox.py', DEMO, 'analyze', '--chip', CHIP], capture_output=True, text=True)
@@ -63,7 +67,7 @@ for i in range(60):
         print(res.stdout); break
     time.sleep(30)
 else:
-    print('Not finished after 30 minutes. Run this cell again later.')"""),
+    print('Nothing to collect yet.' if not (LIVE and USE_MY_IBM_TIME) else 'Not finished after 30 minutes. Run this cell again later.')"""),
 md("""Delete the session when finished (Colab: **Runtime > Disconnect and delete runtime**). Everything in it, including your live run, is removed."""),
 ]
 
