@@ -86,6 +86,7 @@ def other_demo(demo, argv):
     ap.add_argument('cmd', choices=['replay', 'check', 'fire', 'fetch', 'analyze'])
     ap.add_argument('--chip', choices=sorted(CHIPS), default='kingston'); ap.add_argument('--run', type=int, choices=(1, 2), default=2)
     ap.add_argument('--yes', action='store_true')
+    ap.add_argument('--pilot', action='store_true', help='optimization only: the short pilot run the code asks for when the day\'s power ratio is under 3')
     a = ap.parse_args(argv)
     folder = os.path.join(HERE, demo)
     if not os.path.isdir(folder): sys.exit('this demonstration is not in this copy: ' + demo)
@@ -93,6 +94,9 @@ def other_demo(demo, argv):
     import sandbox_entry as E
     if a.cmd == 'fire' and not a.yes: sys.exit('This submits jobs on your IBM account and uses your IBM time. Run "check" first, then add --yes to fire.')
     if a.cmd == 'replay': return E.replay(a.chip, a.run)
+    if a.pilot:
+        if demo != 'optimization' or a.cmd not in ('fire', 'fetch', 'analyze'): sys.exit('--pilot applies to optimization fire, fetch and analyze only')
+        return getattr(E, a.cmd)(a.chip, pilot=True)
     return getattr(E, a.cmd)(a.chip)
 
 

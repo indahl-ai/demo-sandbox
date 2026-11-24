@@ -342,7 +342,7 @@ def mode_fire(pilot):
         print("POWER RATIO (model): %.2f" % pr)
         if pr < 3:
             pj = os.path.join(RUN, "pilot_result.json"); r = json.load(open(pj))["ratio_OS"] if os.path.exists(pj) else None
-            if r is None or r < 3: sys.exit("PILOT NEEDED: model POWER RATIO %.2f is under 3; run --fire --pilot first (pilot ratio %s)" % (pr, "none yet" if r is None else "%.2f" % r))
+            if r is None or r < 3: sys.exit("PILOT NEEDED: model POWER RATIO %.2f is under 3; run the pilot first (pilot ratio %s): python sandbox.py optimization fire --pilot --yes, then fetch --pilot and analyze --pilot, then fire again" % (pr, "none yet" if r is None else "%.2f" % r))
             print("pilot ratio %.2f (hardware) passes 3" % r)
     submit_both(be, x, cfg, sfx, stated, pilot)
     if pilot:

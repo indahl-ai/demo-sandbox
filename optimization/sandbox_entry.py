@@ -77,16 +77,16 @@ def check(chip):
     print('\nNothing was submitted. Estimate for this chip: about %.0f s (the code refuses over %d s after a x%.2f margin).' % (ESTIMATE_SECONDS[chip], V3.MAX_SECONDS, V3.MARGIN))
 
 
-def fire(chip):
-    D, V2, V3 = _live(chip); V3.mode_fire(False)
+def fire(chip, pilot=False):
+    D, V2, V3 = _live(chip); V3.mode_fire(pilot)
 
 
-def fetch(chip):
-    D, V2, V3 = _live(chip); V3.fetch('')
+def fetch(chip, pilot=False):
+    D, V2, V3 = _live(chip); V3.fetch('_pilot' if pilot else '')
 
 
-def analyze(chip):
-    D, V2, V3 = _live(chip); V3.analyze('')
+def analyze(chip, pilot=False):
+    D, V2, V3 = _live(chip); V3.analyze('_pilot' if pilot else '')
 
 
 if __name__ == '__main__':
