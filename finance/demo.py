@@ -69,13 +69,10 @@ def read_key():
 
 def get_service():
     from qiskit_ibm_runtime import QiskitRuntimeService as S
-    tok = read_key(); want = os.environ.get("DEMO_INSTANCE", "open-instance")
+    tok = read_key()
     base = S(channel="ibm_quantum_platform", token=tok)
-    crn = None
-    for i in base.instances():
-        if want.lower() in str(i.get("name", "")).lower():
-            crn = i["crn"]; break
-    if crn is None: sys.exit(f"no instance named like '{want}' on this key")
+    import sys as _s, os as _o; _s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__)))); import pick_instance
+    crn = pick_instance.crn(base)
     return S(channel="ibm_quantum_platform", token=tok, instance=crn)
 
 def usage_remaining(svc):

@@ -29,6 +29,7 @@ You should see the default price error and ours, with 99% intervals. Change any 
 
 ## Step 2: run it on your own IBM account (optional)
     export IBM_QUANTUM_TOKEN=<your own IBM Quantum key>
+    export DEMO_INSTANCE=<instance name>     # only if the key has more than one instance; the run lists them if needed
     python3 sandbox.py check --chip kingston       # shows your remaining IBM time and what a run would use; submits nothing
     python3 sandbox.py fire  --chip kingston --yes # submits two jobs; refuses if the estimate is over 400 s or over your remaining time
     python3 sandbox.py fetch --chip kingston       # when they finish

@@ -240,12 +240,9 @@ def get_service():
     from qiskit_ibm_runtime import QiskitRuntimeService
     tok = os.environ.get('IBM_QUANTUM_TOKEN', '').strip()
     if not tok: sys.exit('Set IBM_QUANTUM_TOKEN to your own IBM Quantum key first. It is read from the environment only and never printed or stored.')
-    name = os.environ.get('DEMO_INSTANCE')
     svc = QiskitRuntimeService(channel='ibm_quantum_platform', token=tok)
-    if not name: return svc
-    crn = [i['crn'] for i in svc.instances() if i.get('name') == name]
-    if not crn: sys.exit('No instance named %s on this key.' % name)
-    return QiskitRuntimeService(channel='ibm_quantum_platform', token=tok, instance=crn[0])
+    import sys as _s, os as _o; _s.path.insert(0, _o.path.dirname(_o.path.dirname(_o.path.abspath(__file__)))); import pick_instance
+    return QiskitRuntimeService(channel='ibm_quantum_platform', token=tok, instance=pick_instance.crn(svc))
 
 def remaining(svc):
     try: return float(svc.usage().get('usage_remaining_seconds'))
