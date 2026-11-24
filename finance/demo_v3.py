@@ -14,6 +14,8 @@ from demo_v2 import ladder, edges_of, rb_circuits, rb_fit, retention, edge_err, 
 
 HERE = D.HERE
 D.MAX_SECONDS = 400
+BILLED_LO, BILLED_HI = 140, 143   # IBM-billed seconds per chip run, job P + main, all six recorded runs (job records, 24 Nov 2026)
+NEED_SECONDS = 200                # the measured bill plus about 40 percent
 STATE3 = os.path.join(HERE, f"state_v3_{D.BACKEND}.json")
 V2.STATE2 = STATE3                      # reuse v2's s2()/mode_fetch against the v3 state file
 V2_STATE = {"ibm_kingston": "state_v2.json", "ibm_fez": "state_v2_ibm_fez.json", "ibm_marrakesh": "state_v2_ibm_marrakesh.json"}
@@ -117,6 +119,7 @@ def mode_dry():
     est_m = 3.0 + COPIES * sum(SHOTS * (0.0006 + 1e-6 * t.depth()) for t in tcs)
     print(f"job P: {len(rbc)} RB circuits x {RB_SHOTS} shots, est {est_p:.1f} s;  main job: {COPIES} copies x {KMAX+1} rungs x {SHOTS} shots, est {est_m:.1f} s")
     print(f"TOTAL estimate {est_p+est_m:.1f} s (limit {D.MAX_SECONDS}); state file {os.path.basename(STATE3)}")
+    print(f"formula estimates run about 2.6x high: IBM billed {BILLED_LO}-{BILLED_HI} s per recorded chip run; fire needs {NEED_SECONDS} s remaining")
     print("runtime options at fire: dynamical_decoupling off, twirling off (gates, measure), no mitigation; read back from the job after submit")
     return est_p + est_m
 
@@ -143,7 +146,12 @@ def mode_fire():
     tcs = ladder(be, cand); edges = edges_of(tcs); rbc, meta = rb_circuits(be, edges)
     est = 6.0 + sum(RB_SHOTS * (0.0006 + 1e-6 * c.depth()) for c in rbc) + COPIES * sum(SHOTS * (0.0006 + 1e-6 * t.depth()) for t in tcs)
     rem = usage_remaining(svc); print(f"estimate {est:.1f} s, remaining {rem:.0f} s, frozen scale {sc}")
-    if est > D.MAX_SECONDS or est > rem: sys.exit(f"REFUSED: estimate exceeds {D.MAX_SECONDS} s or remaining usage")
+    # 24 Nov 2026: the formula above charges 0.0006 s per shot and runs about 2.6x high (368 s against 140 to 143 s billed on all six
+    # recorded chip runs, read from the job records). It still caps the circuit size; the check against the remaining time uses the
+    # measured bill plus a margin, so a plan with enough time for the real run is not refused.
+    print(f"IBM billed {BILLED_LO}-{BILLED_HI} s for each recorded chip run; this run needs {NEED_SECONDS} s remaining (measured bill plus a margin)")
+    if est > D.MAX_SECONDS: sys.exit(f"REFUSED: the formula estimate {est:.0f} s exceeds the {D.MAX_SECONDS} s cap (circuits deeper than the recorded runs)")
+    if rem < NEED_SECONDS: sys.exit(f"REFUSED: {rem:.0f} s remaining, this run needs {NEED_SECONDS} s")
     V2.s2(dict(scale=sc, cand=[cand[0], cand[1]], edges=[list(e) for e in edges], stated={f"{a}-{b}": tables[2][(a, b)] for a, b in edges}, meta=[[list(e), m, nz] for e, m, nz in meta], fired_at=__import__("time").time()))
     sp = SamplerV2(mode=be); set_options_off(sp); jp = sp.run(rbc, shots=RB_SHOTS); V2.s2(dict(job_p=jp.job_id())); print("job P (RB) submitted")
     ob_p = readback(jp, "job P")

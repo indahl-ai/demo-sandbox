@@ -10,7 +10,7 @@
   python3 sandbox.py check  [--chip ...]
         With YOUR IBM Quantum key: confirms the key works, shows your remaining IBM time and what a live run would use. Submits nothing.
   python3 sandbox.py fire   [--chip ...] --yes
-        Runs the demonstration live on your own IBM account. Refuses unless the estimate (about 370 s) is under the 400 s cap and under your remaining time.
+        Runs the demonstration live on your own IBM account. IBM billed 140 to 143 s per chip run in the recorded runs; refuses with less than 200 s remaining.
   python3 sandbox.py fetch  [--chip ...]       collect the finished jobs
   python3 sandbox.py analyze [--chip ...]      the same comparison, on YOUR run
 
