@@ -1,6 +1,7 @@
 # The finance demonstration, run by you
 
-Quantum Idle Audit, Heuremen LLC. Option pricing by amplitude estimation on IBM hardware.
+Quantum Idle Audit, Heuremen LLC. https://quantumidleaudit.com  
+One click on RunPod, or any machine with Python 3.11 or newer. License: LICENSE.txt. Option pricing by amplitude estimation on IBM hardware.
 
 ## What this shows
 The same circuit, the same shots, fitted two ways: the default way (gates assumed good) and with the gate error measured on the qubits the circuit uses.
