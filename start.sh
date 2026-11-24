@@ -13,6 +13,12 @@ else
   uv pip install --quiet --python .venv/bin/python -r requirements.txt
 fi
 echo
+if [ -n "${JUPYTER_PASSWORD:-}" ]; then   # hosted sandboxes only: the base CPU image has no JupyterLab, so it runs from this environment
+  .venv/bin/python -m pip install --quiet --no-cache-dir --root-user-action=ignore jupyterlab ipykernel 2>/dev/null || uv pip install --quiet --python .venv/bin/python jupyterlab ipykernel
+  nohup .venv/bin/jupyter lab --allow-root --no-browser --port=8888 --ip=0.0.0.0 --ServerApp.token="$JUPYTER_PASSWORD" --ServerApp.allow_origin='*' \
+        --ServerApp.root_dir=/workspace --ServerApp.preferred_dir=/workspace/demo > /root/jupyter.log 2>&1 &
+  echo "JupyterLab started on port 8888"
+fi
 echo "SETUP COMPLETE. Quantum Idle Audit demonstrations are ready in /workspace/demo"
 echo "  cd /workspace/demo && source .venv/bin/activate"
 echo "  Replay a recorded result (no key, no IBM time):   python sandbox.py <demo> replay"
