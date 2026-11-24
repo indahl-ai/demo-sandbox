@@ -51,7 +51,7 @@ def _headline(text, chip, run):
         s = ln.strip()
         if s.startswith("logical error per round,") or s.startswith("OUTCOME OE minus CE, logical error per round") or s.startswith("ratio, client over ours"):
             keep.append(s)
-    out = ["", "=" * 78, "HEADLINE, %s, recorded run %s: logical error per round (lower is better)" % (CHIPS[chip], run if run else "of yours")]
+    out = ["", "=" * 78, "HEADLINE, %s, %s: logical error per round (lower is better)" % (CHIPS[chip], ("recorded run %s" % run) if run else "your live run")]
     out += ["  " + k for k in keep]
     out.append("  CE is the client's own default compile; OE is the same compiled circuit with our measured correction. 99% intervals over 16 copies.")
     out.append("=" * 78)
@@ -97,7 +97,7 @@ def check(chip="kingston"):
     D = _live(chip); os.environ["DEMO_FAKE"] = "0"; D.mode_dry()
     print("\nNothing was submitted. The code's estimate for a live run is %.0f s with margin (cap %.0f s); IBM billed %d to %d s for our recorded runs."
           % (ESTIMATE_SECONDS, CAP_SECONDS, min(min(v.values()) for v in MEASURED_SECONDS.values()), max(max(v.values()) for v in MEASURED_SECONDS.values())))
-    print("To run it live: python sandbox_entry.py fire --chip %s --yes" % chip)
+    print("To run it live: python sandbox.py error_correction fire --chip %s --yes" % chip)
 
 
 def fire(chip="kingston", yes=False):

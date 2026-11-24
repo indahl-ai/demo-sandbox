@@ -22,6 +22,37 @@ logging.getLogger('qiskit_ibm_runtime').setLevel(logging.ERROR)   # IBM's librar
 import summary
 
 
+import re
+_HINT = re.compile(r'(run|use|rerun|[Nn]ext:|then|To run it live:)')
+_FLAG = re.compile(r'(?:python )?(?:sandbox_entry\.py |demo(?:_v\d)?\.py )?--?(fire|fetch|analyze|dry)\b((?: --pilot)?)(?: --chip \w+)?(?: --yes)?')
+
+
+def _hints(text, demo, chip):
+    """The demonstration scripts print next-step hints in their own flag form (--fetch, --analyze). Rewrite those hint lines, and only
+    those, into the sandbox command a reader types (24 Nov 2026: a cold run followed a hint to a file that is not in the repository)."""
+    if not demo: return text
+    def one(line):
+        if not _HINT.search(line) or '--' not in line and 'sandbox_entry.py' not in line: return line
+        def sub(m):
+            cmd = 'check' if m.group(1) == 'dry' else m.group(1)
+            return 'python sandbox.py %s %s --chip %s%s%s' % (demo, cmd, chip, m.group(2), ' --yes' if cmd == 'fire' else '')
+        return _FLAG.sub(sub, line)
+    return '\n'.join(one(l) for l in text.split('\n')).replace(' (same --pilot flag)', '')
+
+
+class _Hints(io.TextIOBase):
+    def __init__(self, a, demo, chip): self.a, self.demo, self.chip, self.pend = a, demo, chip, ''
+    def write(self, x):
+        self.pend += x
+        if '\n' in self.pend:
+            done, self.pend = self.pend.rsplit('\n', 1)
+            self.a.write(_hints(done, self.demo, self.chip) + '\n')
+        return len(x)
+    def flush(self):
+        if self.pend: self.a.write(_hints(self.pend, self.demo, self.chip)); self.pend = ''
+        self.a.flush()
+
+
 class _Tee(io.TextIOBase):
     def __init__(self, a): self.a, self.buf = a, io.StringIO()
     def write(self, x): self.a.write(x); self.buf.write(x); return len(x)
@@ -122,6 +153,20 @@ def other_demo(demo, argv):
 
 
 def main():
+    demo = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] in OTHER + ('finance',) else ('finance' if len(sys.argv) > 1 and sys.argv[1] in ('replay', 'check', 'fire', 'fetch', 'analyze') else None)
+    chip = sys.argv[sys.argv.index('--chip') + 1] if '--chip' in sys.argv[:-1] else 'kingston'
+    out = _Hints(sys.stdout, demo, chip)
+    try:
+        with contextlib.redirect_stdout(out): return _main()
+    except SystemExit as e:
+        out.flush()
+        if isinstance(e.code, str): raise SystemExit(_hints(e.code, demo, chip))
+        raise
+    finally:
+        out.flush()
+
+
+def _main():
     if len(sys.argv) > 1 and sys.argv[1] in OTHER: return other_demo(sys.argv[1], sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] == 'finance': sys.argv.pop(1)
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)

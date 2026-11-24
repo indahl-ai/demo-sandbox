@@ -27,7 +27,7 @@ Elsewhere: `git clone https://github.com/indahl-ai/demo-sandbox && cd demo-sandb
     python sandbox.py chemistry replay
     python sandbox.py finance replay --chip fez --run 1
 
-Options: `--chip kingston`, `fez` or `marrakesh`, and `--run 1` or `2`. Each folder holds a `STATUS.md` listing every published figure beside the figure the replay prints.
+Options: `--chip kingston`, `fez` or `marrakesh`, and `--run 1` or `2`. Without options it replays ibm_kingston, run 2. Each folder holds a `STATUS.md` listing every published figure beside the figure the replay prints.
 
 ## Step 3: run it live on your own IBM account (optional)
     read -s -p "IBM Quantum API key: " IBM_QUANTUM_TOKEN; export IBM_QUANTUM_TOKEN; echo
@@ -38,7 +38,7 @@ Options: `--chip kingston`, `fez` or `marrakesh`, and `--run 1` or `2`. Each fol
 
 `read -s` asks for the key without showing it and keeps it out of the shell history. If your key has more than one IBM instance, `check` lists them and stops: choose one with `export DEMO_INSTANCE="<instance name>"` and run `check` again. Each `fire` refuses if your remaining IBM time is too low for the run, and says how much it needs. Optimization may ask for a short pilot first on days when IBM's record leaves too little signal; the message gives the exact commands (`--pilot`).
 
-Your runs are saved inside the demonstration's folder (for example `chemistry/my_runs/`).
+A live run is saved on this machine under the repository folder (`analyze` prints the path). Each new terminal or SSH session needs the key entered again (and `DEMO_INSTANCE` set again, if used).
 
 ## What leaves this machine
 Only calls to IBM, made with your key, plus package downloads at setup. Your key is read from the environment variable, never printed and never written to a file. Nothing is sent to us. To stop everything, delete the container.

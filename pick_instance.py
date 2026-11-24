@@ -15,4 +15,10 @@ def crn(base):
         sys.exit("no instance named like '%s' on this key. Instances on this key: %s" % (want, ', '.join(str(i.get('name')) for i in insts)))
     if len(insts) == 1: return insts[0]['crn']
     if not insts: sys.exit('this key has no IBM Quantum instance')
-    sys.exit('this key has %d instances: %s. Choose one:  export DEMO_INSTANCE="<name>"' % (len(insts), ', '.join(str(i.get('name')) for i in insts)))
+    def left(i):
+        try:
+            from qiskit_ibm_runtime import QiskitRuntimeService as S
+            u = S(channel='ibm_quantum_platform', token=os.environ.get('IBM_QUANTUM_TOKEN', '').strip(), instance=i['crn']).usage()
+            return '%s (%s s of IBM time left)' % (i.get('name'), int(u.get('usage_remaining_seconds')))
+        except Exception: return str(i.get('name'))
+    sys.exit('this key has %d instances: %s.\nChoose one:  export DEMO_INSTANCE="<name>"   then run check again' % (len(insts), ', '.join(left(i) for i in insts)))
