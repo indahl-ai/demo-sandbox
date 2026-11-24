@@ -13,7 +13,9 @@ else
   uv pip install --quiet --python .venv/bin/python -r requirements.txt
 fi
 echo
-echo "Quantum Idle Audit finance demonstration is ready. First:  source .venv/bin/activate"
-echo "  1. No key needed:      python sandbox.py replay"
-echo "  2. Your own IBM time:  export IBM_QUANTUM_TOKEN=<your key>; python sandbox.py check"
+echo "SETUP COMPLETE. Quantum Idle Audit demonstrations are ready in /workspace/demo"
+echo "  cd /workspace/demo && source .venv/bin/activate"
+echo "  Replay a recorded result (no key, no IBM time):   python sandbox.py <demo> replay"
+echo "      <demo> = finance, chemistry, optimization, simulation, error_correction or ai_kernels"
+echo "  Live run on your own IBM account: see README.md or https://quantumidleaudit.com/runpod-sandbox"
 echo "Everything stays in this container. Read README.md first."

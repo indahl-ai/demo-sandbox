@@ -17,6 +17,23 @@
 Your key is read from the IBM_QUANTUM_TOKEN environment variable, used only to talk to IBM, never printed, never written to disk, and never sent anywhere
 else. Your runs are saved in ./my_runs/ on this machine. The recorded runs in ./recorded/ are read-only references and are never changed."""
 import os, sys, shutil, argparse
+import io, logging, contextlib
+logging.getLogger('qiskit_ibm_runtime').setLevel(logging.ERROR)   # IBM's library prints long WARNING lines on every call; they read as errors to a newcomer
+import summary
+
+
+class _Tee(io.TextIOBase):
+    def __init__(self, a): self.a, self.buf = a, io.StringIO()
+    def write(self, x): self.a.write(x); self.buf.write(x); return len(x)
+    def flush(self): self.a.flush()
+
+
+def _with_summary(demo, chip, what, fn):
+    """Run fn with its output shown as usual, then print a RESULT box that restates the printed headline in plain words."""
+    t = _Tee(sys.stdout)
+    with contextlib.redirect_stdout(t): r = fn()
+    print(summary.render(demo, chip, what, t.buf.getvalue()))
+    return r
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, 'finance'))
@@ -93,7 +110,8 @@ def other_demo(demo, argv):
     sys.path.insert(0, folder); os.chdir(folder)
     import sandbox_entry as E
     if a.cmd == 'fire' and not a.yes: sys.exit('This submits jobs on your IBM account and uses your IBM time. Run "check" first, then add --yes to fire.')
-    if a.cmd == 'replay': return E.replay(a.chip, a.run)
+    if a.cmd == 'replay': return _with_summary(demo, a.chip, 'recorded run %d (replay)' % a.run, lambda: E.replay(a.chip, a.run))
+    if a.cmd == 'analyze' and not a.pilot: return _with_summary(demo, a.chip, 'your live run', lambda: E.analyze(a.chip))
     if a.pilot:
         if demo != 'optimization' or a.cmd not in ('fire', 'fetch', 'analyze'): sys.exit('--pilot applies to optimization fire, fetch and analyze only')
         return getattr(E, a.cmd)(a.chip, pilot=True)
@@ -113,7 +131,10 @@ def main():
         p.add_argument('--chip', choices=sorted(CHIPS), default='kingston')
         if name == 'replay': p.add_argument('--run', type=int, choices=(1, 2), default=2)
         if name == 'fire': p.add_argument('--yes', action='store_true')
-    a = ap.parse_args(); a.fn(a)
+    a = ap.parse_args()
+    if a.cmd in ('replay', 'analyze'):
+        return _with_summary('finance', a.chip, ('recorded run %d (replay)' % a.run) if a.cmd == 'replay' else 'your live run', lambda: a.fn(a))
+    a.fn(a)
 
 
 if __name__ == '__main__':

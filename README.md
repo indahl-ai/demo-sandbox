@@ -1,53 +1,59 @@
-# The finance demonstration, run by you
+# Quantum Idle Audit demonstrations, run by you
 
 Quantum Idle Audit, Heuremen LLC. https://quantumidleaudit.com  
 One click on RunPod, or any machine with Python 3.11 or newer. License: LICENSE.txt.
 
-Option pricing by amplitude estimation on IBM hardware.
+Six demonstrations, each the same circuit on the same IBM chip run two ways: the client's default settings, and calibrated with the gate error measured on the qubits the circuit uses. Each one can be replayed from our recorded hardware runs with no key, or run live on your own IBM account.
 
-## What this shows
-The same circuit, the same shots, fitted two ways: the default way (gates assumed good) and with the gate error measured on the qubits the circuit uses.
-The result is the error in the option price against the exact price (8.2543). Lower is better.
+| `<demo>` | What it measures | IBM time per chip, live run (billed on our recorded runs) |
+|---|---|---|
+| `finance` | option price error against the exact price | about 140 s |
+| `chemistry` | molecular energy error (H2) | about 20 s |
+| `optimization` | schedule quality (approximation ratio) | about 50 s |
+| `simulation` | error against the exact simulated answer | about 45 s |
+| `error_correction` | logical qubit failures per round | about 90 s |
+| `ai_kernels` | shot budget against a plan built on IBM's published figures, and a readout audit | about 20 s |
 
-## The demonstrations
-Six demonstrations share one command line. Finance is the default. Others name themselves first:
+Every command prints its full output, then a short RESULT box that restates the headline in plain words. The box only repeats figures printed above it.
 
-    python3 sandbox.py replay                         # finance
-    python3 sandbox.py optimization replay --chip fez --run 1
-    python3 sandbox.py simulation replay
-    python3 sandbox.py error_correction replay --chip kingston
-    python3 sandbox.py chemistry replay --chip marrakesh
-    python3 sandbox.py ai_kernels replay
+## Step 1: start
+On RunPod the template does this for you. Setup takes about a minute after the pod starts and ends with `SETUP COMPLETE` in `/root/setup.log`.
 
-Each folder holds the demonstration's scripts and a `STATUS.md` that lists every published figure beside the figure the replay prints.
+    cd /workspace/demo && source .venv/bin/activate
 
-## Step 1: replay our recorded runs. No key, no network, no IBM time.
-    python3 sandbox.py replay                      # run 2, ibm_kingston
-    python3 sandbox.py replay --chip fez --run 1
-The recorded hardware runs (every IBM job ID is in the state files under `recorded/`) are re-analyzed on this machine.
-You should see the default price error and ours, with 99% intervals. Change any setting in `finance/` and run it again.
+Elsewhere: `git clone https://github.com/indahl-ai/demo-sandbox && cd demo-sandbox && bash start.sh && source .venv/bin/activate`
 
-## Step 2: run it on your own IBM account (optional)
-    export IBM_QUANTUM_TOKEN=<your own IBM Quantum key>
-    export DEMO_INSTANCE=<instance name>     # only if the key has more than one instance; the run lists them if needed
-    python3 sandbox.py check --chip kingston       # shows your remaining IBM time and what a run would use; submits nothing
-    python3 sandbox.py fire  --chip kingston --yes # submits two jobs; refuses if the estimate is over 400 s or over your remaining time
-    python3 sandbox.py fetch --chip kingston       # when they finish
-    python3 sandbox.py analyze --chip kingston     # the same comparison, on your run
+## Step 2: replay a recorded result. No key, no network, no IBM time.
+    python sandbox.py chemistry replay
+    python sandbox.py finance replay --chip fez --run 1
+
+Options: `--chip kingston`, `fez` or `marrakesh`, and `--run 1` or `2`. Each folder holds a `STATUS.md` listing every published figure beside the figure the replay prints.
+
+## Step 3: run it live on your own IBM account (optional)
+    read -s -p "IBM Quantum API key: " IBM_QUANTUM_TOKEN; export IBM_QUANTUM_TOKEN; echo
+    python sandbox.py chemistry check --chip fez            # remaining IBM time and the estimate; submits nothing
+    python sandbox.py chemistry fire --chip fez --yes       # submits the jobs on your account
+    python sandbox.py chemistry fetch --chip fez            # repeat every 30 s or so until it says DONE
+    python sandbox.py chemistry analyze --chip fez          # the same comparison, on your run
+
+`read -s` asks for the key without showing it and keeps it out of the shell history. If your key has more than one IBM instance, `check` lists them and stops: choose one with `export DEMO_INSTANCE="<instance name>"` and run `check` again. Each `fire` refuses if your remaining IBM time is too low for the run, and says how much it needs. Optimization may ask for a short pilot first on days when IBM's record leaves too little signal; the message gives the exact commands (`--pilot`).
+
+Your runs are saved inside the demonstration's folder (for example `chemistry/my_runs/`).
 
 ## What leaves this machine
-Only calls to IBM, made with your key. Your key is read from the environment variable, never printed and never written to a file.
-Nothing is sent to us. Your runs are saved in `my_runs/` here and nowhere else. To stop everything, delete the container.
+Only calls to IBM, made with your key, plus package downloads at setup. Your key is read from the environment variable, never printed and never written to a file. Nothing is sent to us. To stop everything, delete the container.
 
-## What it costs you
-Replay: nothing. A live run: about 140 seconds (a little over 2 minutes) of IBM QPU time on one chip. That is what IBM billed for all six of our recorded runs (a 4 s calibration job plus a 136 to 139 s main job; the job IDs are in `recorded/`). `check` prints a more cautious estimate of about 370 s for your chip and your remaining time, and `fire` refuses if your remaining time is less than that estimate, so a plan with 140 to 370 s left will be refused even though the run would fit. `check` is free to run.
-On RunPod, a small CPU pod is enough; no GPU is used.
+## For AI agents and scripts
+Deploy the public RunPod template `kpyzbrz9gs` on a CPU pod (`cpu3c-2-4` is enough) through RunPod's API, with your SSH public key in the pod's `PUBLIC_KEY` environment variable. Wait until `/root/setup.log` contains `SETUP COMPLETE`, then run the commands above over SSH. Pass the IBM key over SSH standard input into `IBM_QUANTUM_TOKEN` rather than on a command line. Terminate the pod when finished.
 
 ## What the replay is, exactly
-It re-analyzes the recorded hardware counts and the recorded randomized-benchmarking data. The only stand-in is the chip's shape: the circuits are rebuilt on a fake IBM chip to count their depth and two-qubit gates, which the fit needs. All twelve published numbers (six runs, client and ours) come out the same to the digits we publish.
+It re-analyzes the recorded hardware counts and the recorded calibration data. The only stand-in is the chip's shape: circuits are rebuilt on a fake IBM chip to count gates, which the fit needs. Every published number comes out the same to the digits we publish (see each `STATUS.md`).
 
-## Read the marrakesh runs differently
-On ibm_marrakesh the fade scale sits on the edge of its search range, which means the error there is a layout fault, not a fade. We include it as the layout-fault control. Its improvement is not a calibration result and should not be quoted as one. Kingston and fez are the calibrated chips.
+## Read the marrakesh finance runs differently
+On ibm_marrakesh the finance fade scale sits on the edge of its search range: the error there is a layout fault, not a fade. It is the layout-fault control, and its improvement is not a calibration result.
 
 ## What it does not claim
-It shows one circuit, one option, on three IBM chips, in two recorded runs. It does not say your own circuit will improve by the same factor.
+Each demonstration shows one circuit on three IBM chips in two recorded runs. A live run shows that day's chip, so its figures vary around the published ones. It does not say your own circuit will improve by the same factor.
+
+## Checks
+`python tests/test_cli.py` drives every command of every demonstration with the IBM calls replaced, and fails if an option is lost on the way. It submits nothing.
