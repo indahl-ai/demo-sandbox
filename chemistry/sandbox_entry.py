@@ -65,9 +65,10 @@ def _headline(res, V3):
     n, o, s, ro = iv('N'), iv('O'), iv('S'), iv('RO')
     fr = {a: np.array([x[1] for x in res[a]]) for a in res}
     dF = fr['O'] - fr['S']; fword = V3.word(-(dF.mean() + V3.hw(dF)), -(dF.mean() - V3.hw(dF)), V3.EQUIV_F)
-    ratio = round(n[0], 1) / round(o[0], 1);   # the page divides the two numbers it shows
+    ratio = n[0] / o[0]   # unrounded (24 Nov 2026: the earlier version divided the rounded page numbers to agree with the page)
     dN = fr['O'] - fr['N']; fwordN = V3.word(-(dN.mean() + V3.hw(dN)), -(dN.mean() - V3.hw(dN)), V3.EQUIV_F)
     ratio_txt = ('%.0fx' % ratio) if ratio >= 10 else ('%.1fx' % ratio)
+    if o[1] <= 0: ratio_txt = '>%dx' % int(n[1] / o[2])   # our interval reaches zero, so only a lower bound is a reading: client low end over our high end
     L = ['', '=== HEADLINE (as on the demonstration page): energy error in mHa, lower is better ===',
          'Client (default layout, bits as read):          %.1f mHa  (99%% interval %.1f to %.1f)' % n,
          'Ours (calibrated with the measured gate error):  %.1f mHa  (99%% interval %.1f to %.1f)' % o,

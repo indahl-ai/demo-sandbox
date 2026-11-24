@@ -6,13 +6,13 @@ Run 1 = the first column pair of the published chips table (job ids in recorded_
 |---|---|---|---|---|---|
 | client energy error, mHa | kingston | 1 | 12.8 | 12.8 | PASS |
 | ours energy error, mHa | kingston | 1 | 3.5 | 3.5 | PASS |
-| ratio text | kingston | 1 | 3.7x lower | 3.7x lower | PASS |
+| ratio text | kingston | 1 | 3.6x lower | 3.6x lower | PASS |
 | client energy error, mHa | kingston | 2 | 12.8 | 12.8 | PASS |
 | ours energy error, mHa | kingston | 2 | 2.6 | 2.6 | PASS |
 | readout fix alone, mHa (page text) | kingston | 1 | 8.1 | 8.1 | PASS |
 | client energy error, mHa | fez | 1 | 14.8 | 14.8 | PASS |
 | ours energy error, mHa | fez | 1 | 0.9 | 0.9 | PASS |
-| ratio text | fez | 1 | 16x lower | 16x lower | PASS |
+| ratio text | fez | 1 | >5x lower | >5x lower | PASS |
 | client energy error, mHa | fez | 2 | 15.3 | 15.3 | PASS |
 | ours energy error, mHa | fez | 2 | 2.9 | 2.9 | PASS |
 | readout fix alone, mHa (page text) | fez | 1 | 9.0 | 9.0 | PASS |
