@@ -97,7 +97,10 @@ def other_demo(demo, argv):
     if a.pilot:
         if demo != 'optimization' or a.cmd not in ('fire', 'fetch', 'analyze'): sys.exit('--pilot applies to optimization fire, fetch and analyze only')
         return getattr(E, a.cmd)(a.chip, pilot=True)
-    return getattr(E, a.cmd)(a.chip)
+    fn = getattr(E, a.cmd)
+    import inspect
+    if a.cmd == 'fire' and 'yes' in inspect.signature(fn).parameters: return fn(a.chip, yes=a.yes)   # 24 Nov 2026: --yes was never passed on, so fire refused for ai_kernels, simulation and error_correction
+    return fn(a.chip)
 
 
 def main():
