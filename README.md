@@ -16,6 +16,8 @@ Six demonstrations share one command line. Finance is the default. Others name t
     python3 sandbox.py optimization replay --chip fez --run 1
     python3 sandbox.py simulation replay
     python3 sandbox.py error_correction replay --chip kingston
+    python3 sandbox.py chemistry replay --chip marrakesh
+    python3 sandbox.py ai_kernels replay
 
 Each folder holds the demonstration's scripts and a `STATUS.md` that lists every published figure beside the figure the replay prints.
 

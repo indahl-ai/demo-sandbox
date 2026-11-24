@@ -26,3 +26,31 @@ packs: Q,P
 - P8: holds: the page section is rendered and checked in a browser before each ship.
 - P9: holds: no we or you in page copy, no semicolons, no counts in headings.
 - P10: n/a: no post hoc readings are added.
+
+## 2026-11-24 09:49 Recorded run results for the chemistry and AI demonstration replays, copied from the demonstration folders; the published pages were changed to the replayed figures on 24 Nov 2026.
+packs: Q,P
+(answer each line: holds:/fixed:/caught:/n/a:/cannot tell: followed by what was checked)
+- I: holds: client and calibrated arms come from the same recorded jobs, copied unchanged.
+- II: holds: run 1 and run 2 are printed separately on every chip.
+- III: holds: signed differences are printed with intervals and the outcome word.
+- V: holds: each replay prints the demonstration's own ruler (99% intervals, outcome words).
+- VI: holds: outcome words are printed as the code returns them.
+- R: holds: figures come from the recorded state files and IBM's saved calibration record (recovered read-only for AI). STATUS.md in each folder lists page against replay, all PASS.
+- X: fixed: the chemistry page said BELOW for kingston run 1 on energy (code: CONSISTENT inside the 10 mHa margin) and CONSISTENT for fez run 2 bits right against the stated correction (code: BELOW), and the AI page carried three shot-bill figures 0.1 to 0.3 percent off the code (10.96x for 10.99x twice, 6.47x for 6.48x). Cause: the page data was written by hand from the check notes, not from the analysis code. The pages now carry the code's figures, and the replay verifiers in chemistry/ and ai_kernels/ compare every published figure with the code and print FAIL on any difference.
+- QA: holds: stated figures are IBM's record in force for each job.
+- QB: holds: same jobs and shots for both arms.
+- QC: holds: the replays reproduce every published figure.
+- QD: holds: copies compared by gap with a width.
+- QE: holds: no mechanism named.
+- QF: holds: job IDs and billed seconds from the job records.
+- QG: holds: page and replay agree figure for figure (STATUS.md).
+- P1: n/a: no quotations.
+- P2: holds: each figure states what it is.
+- P3: holds: settings printed as read back from the jobs.
+- P4: holds: no cause named.
+- P5: holds: 99% intervals.
+- P6: holds: README states the limits.
+- P7: holds: repository and qia.com ship path, verified live.
+- P8: holds: rendered pages checked.
+- P9: holds: house copy rules.
+- P10: n/a: no post hoc readings.

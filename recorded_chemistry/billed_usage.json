@@ -1,0 +1,65 @@
+{
+ "note": "Billed QPU seconds per job, read once from IBM with job.usage() (read-only lookups). Job ids are the ones in the state files.",
+ "jobs": {
+  "run1_kingston": {
+   "job_p": {
+    "id": "dbv7asnf8rhs73bnd620",
+    "seconds": 9
+   },
+   "job_main": {
+    "id": "dbv7asn82tmc73dugun0",
+    "seconds": 9
+   }
+  },
+  "run1_fez": {
+   "job_p": {
+    "id": "dbv7bc782tmc73dugv8g",
+    "seconds": 9
+   },
+   "job_main": {
+    "id": "dbv7bcn82tmc73dugv9g",
+    "seconds": 9
+   }
+  },
+  "run1_marrakesh": {
+   "job_p": {
+    "id": "dbv7c65arooc73fl24dg",
+    "seconds": 9
+   },
+   "job_main": {
+    "id": "dbv7c66ps3fc73bjv52g",
+    "seconds": 9
+   }
+  },
+  "run2_kingston": {
+   "job_p": {
+    "id": "dbv7i6f82tmc73duh890",
+    "seconds": 9
+   },
+   "job_main": {
+    "id": "dbv7i6mps3fc73bjvcl0",
+    "seconds": 9
+   }
+  },
+  "run2_fez": {
+   "job_p": {
+    "id": "dbv7ivdarooc73fl2da0",
+    "seconds": 9
+   },
+   "job_main": {
+    "id": "dbv7ivn82tmc73duh970",
+    "seconds": 9
+   }
+  },
+  "run2_marrakesh": {
+   "job_p": {
+    "id": "dbv7jo7f8rhs73bndh2g",
+    "seconds": 9
+   },
+   "job_main": {
+    "id": "dbv7jof82tmc73duha60",
+    "seconds": 9
+   }
+  }
+ }
+}
