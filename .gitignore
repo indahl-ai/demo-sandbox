@@ -3,3 +3,7 @@ my_runs/
 .replay_tmp/
 __pycache__/
 *.pyc
+chemistry/
+recorded_chemistry/
+ai_kernels/
+recorded_ai_kernels/

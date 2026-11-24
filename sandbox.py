@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""sandbox.py: the Quantum Idle Audit finance demonstration, run by you, in your own space.
+"""sandbox.py: the Quantum Idle Audit demonstrations, run in a space that belongs to whoever starts them.
+
+  python3 sandbox.py [DEMO] COMMAND [options]      DEMO is finance (the default), chemistry, optimization, simulation, error_correction or ai_kernels.
+
 
   python3 sandbox.py replay [--run 1|2] [--chip kingston|fez|marrakesh]
         Re-computes our published result from the recorded hardware runs. No key, no network, no IBM time.
@@ -74,7 +77,28 @@ def cmd_analyze(a):
     D, V2, V3 = live(a); V3.mode_analyze()
 
 
+OTHER = ('chemistry', 'optimization', 'simulation', 'error_correction', 'ai_kernels')
+
+
+def other_demo(demo, argv):
+    """Every demonstration other than finance ships its own sandbox_entry module (replay, check, fire, fetch, analyze)."""
+    ap = argparse.ArgumentParser(prog='sandbox.py ' + demo)
+    ap.add_argument('cmd', choices=['replay', 'check', 'fire', 'fetch', 'analyze'])
+    ap.add_argument('--chip', choices=sorted(CHIPS), default='kingston'); ap.add_argument('--run', type=int, choices=(1, 2), default=2)
+    ap.add_argument('--yes', action='store_true')
+    a = ap.parse_args(argv)
+    folder = os.path.join(HERE, demo)
+    if not os.path.isdir(folder): sys.exit('this demonstration is not in this copy: ' + demo)
+    sys.path.insert(0, folder); os.chdir(folder)
+    import sandbox_entry as E
+    if a.cmd == 'fire' and not a.yes: sys.exit('This submits jobs on your IBM account and uses your IBM time. Run "check" first, then add --yes to fire.')
+    if a.cmd == 'replay': return E.replay(a.chip, a.run)
+    return getattr(E, a.cmd)(a.chip)
+
+
 def main():
+    if len(sys.argv) > 1 and sys.argv[1] in OTHER: return other_demo(sys.argv[1], sys.argv[2:])
+    if len(sys.argv) > 1 and sys.argv[1] == 'finance': sys.argv.pop(1)
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='cmd', required=True)
     for name, fn in (('replay', cmd_replay), ('check', cmd_check), ('fire', cmd_fire), ('fetch', cmd_fetch), ('analyze', cmd_analyze)):

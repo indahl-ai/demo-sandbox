@@ -9,6 +9,16 @@ Option pricing by amplitude estimation on IBM hardware.
 The same circuit, the same shots, fitted two ways: the default way (gates assumed good) and with the gate error measured on the qubits the circuit uses.
 The result is the error in the option price against the exact price (8.2543). Lower is better.
 
+## The demonstrations
+Six demonstrations share one command line. Finance is the default. Others name themselves first:
+
+    python3 sandbox.py replay                         # finance
+    python3 sandbox.py optimization replay --chip fez --run 1
+    python3 sandbox.py simulation replay
+    python3 sandbox.py error_correction replay --chip kingston
+
+Each folder holds the demonstration's scripts and a `STATUS.md` that lists every published figure beside the figure the replay prints.
+
 ## Step 1: replay our recorded runs. No key, no network, no IBM time.
     python3 sandbox.py replay                      # run 2, ibm_kingston
     python3 sandbox.py replay --chip fez --run 1

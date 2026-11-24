@@ -1,0 +1,75 @@
+{
+ "note": "Billed QPU seconds read from IBM (job.usage()) for each recorded job.",
+ "runs": {
+  "run1": {
+   "kingston": {
+    "P": {
+     "job_id": "dbv7a67f8rhs73bnd580",
+     "billed_seconds": 18
+    },
+    "main": {
+     "job_id": "dbv7a6larooc73fl21ug",
+     "billed_seconds": 24
+    },
+    "total_billed_seconds": 42
+   },
+   "fez": {
+    "P": {
+     "job_id": "dbv7elmps3fc73bjv890",
+     "billed_seconds": 18
+    },
+    "main": {
+     "job_id": "dbv7em7f8rhs73bndas0",
+     "billed_seconds": 24
+    },
+    "total_billed_seconds": 42
+   },
+   "marrakesh": {
+    "P": {
+     "job_id": "dbv7fgeps3fc73bjv9i0",
+     "billed_seconds": 18
+    },
+    "main": {
+     "job_id": "dbv7fgvf8rhs73bndc60",
+     "billed_seconds": 25
+    },
+    "total_billed_seconds": 43
+   }
+  },
+  "run2": {
+   "kingston": {
+    "P": {
+     "job_id": "dbv7i7vf8rhs73bndfcg",
+     "billed_seconds": 18
+    },
+    "main": {
+     "job_id": "dbv7i8f82tmc73duh8cg",
+     "billed_seconds": 24
+    },
+    "total_billed_seconds": 42
+   },
+   "fez": {
+    "P": {
+     "job_id": "dbv7jk5arooc73fl2e4g",
+     "billed_seconds": 18
+    },
+    "main": {
+     "job_id": "dbv7jklarooc73fl2e50",
+     "billed_seconds": 24
+    },
+    "total_billed_seconds": 42
+   },
+   "marrakesh": {
+    "P": {
+     "job_id": "dbv7kdvf8rhs73bndhug",
+     "billed_seconds": 18
+    },
+    "main": {
+     "job_id": "dbv7kef82tmc73duhav0",
+     "billed_seconds": 25
+    },
+    "total_billed_seconds": 43
+   }
+  }
+ }
+}

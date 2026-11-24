@@ -1,0 +1,542 @@
+[
+ {
+  "setting": "R=1: turn on data 0 at q93 through readout 0, deg",
+  "value": -11.5057,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 1 at q98 through readout 0, deg",
+  "value": 13.439,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 2 at q87 through readout 0, deg",
+  "value": -15.0866,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 3 at q91 through readout 0, deg",
+  "value": -32.4834,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 4 at q88 through readout 0, deg",
+  "value": -28.1848,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 5 at q107 through readout 0, deg",
+  "value": -36.3958,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 6 at q129 through readout 0, deg",
+  "value": -12.2313,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 7 at q109 through readout 0, deg",
+  "value": -1.3629,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=1: turn on data 8 at q117 through readout 0, deg",
+  "value": -18.571,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 0 at q91 through readout 0, deg",
+  "value": -24.4109,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 1 at q110 through readout 0, deg",
+  "value": 3.3345,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 2 at q129 through readout 0, deg",
+  "value": -11.6894,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 3 at q92 through readout 0, deg",
+  "value": 9.6369,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 4 at q98 through readout 0, deg",
+  "value": 16.6762,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 5 at q108 through readout 0, deg",
+  "value": 6.1004,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 6 at q88 through readout 0, deg",
+  "value": -13.9451,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 7 at q89 through readout 0, deg",
+  "value": -2.9475,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 8 at q106 through readout 0, deg",
+  "value": -18.3281,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 0 at q91 through readout 1, deg",
+  "value": -19.5751,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 1 at q110 through readout 1, deg",
+  "value": 2.6487,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 2 at q129 through readout 1, deg",
+  "value": -11.4832,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 3 at q92 through readout 1, deg",
+  "value": 8.8722,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 4 at q98 through readout 1, deg",
+  "value": 14.3605,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 5 at q108 through readout 1, deg",
+  "value": 2.6465,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 6 at q88 through readout 1, deg",
+  "value": -15.0946,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 7 at q89 through readout 1, deg",
+  "value": -4.1788,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=2: turn on data 8 at q105 through readout 1, deg",
+  "value": -25.2783,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 0 at q97 through readout 0, deg",
+  "value": -23.175,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 1 at q110 through readout 0, deg",
+  "value": 4.4637,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 2 at q90 through readout 0, deg",
+  "value": -65.9778,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 3 at q107 through readout 0, deg",
+  "value": -35.6316,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 4 at q108 through readout 0, deg",
+  "value": 5.6328,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 5 at q98 through readout 0, deg",
+  "value": 19.944,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 6 at q89 through readout 0, deg",
+  "value": -37.8053,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 7 at q88 through readout 0, deg",
+  "value": -15.098,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 8 at q92 through readout 0, deg",
+  "value": 10.4697,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 0 at q97 through readout 1, deg",
+  "value": -23.0867,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 1 at q110 through readout 1, deg",
+  "value": 2.1741,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 2 at q112 through readout 1, deg",
+  "value": -39.6182,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 3 at q107 through readout 1, deg",
+  "value": -35.1543,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 4 at q108 through readout 1, deg",
+  "value": 1.5378,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 5 at q90 through readout 1, deg",
+  "value": -69.9898,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 6 at q89 through readout 1, deg",
+  "value": -39.3977,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 7 at q88 through readout 1, deg",
+  "value": -13.9365,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 8 at q93 through readout 1, deg",
+  "value": -11.3776,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 0 at q87 through readout 2, deg",
+  "value": -21.6795,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 1 at q109 through readout 2, deg",
+  "value": -6.2034,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 2 at q111 through readout 2, deg",
+  "value": -9.7826,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 3 at q108 through readout 2, deg",
+  "value": 5.6496,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 4 at q97 through readout 2, deg",
+  "value": -23.2062,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 5 at q98 through readout 2, deg",
+  "value": 14.3562,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 6 at q88 through readout 2, deg",
+  "value": -10.3308,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 7 at q90 through readout 2, deg",
+  "value": -67.9059,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=3: turn on data 8 at q93 through readout 2, deg",
+  "value": -12.2185,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 0 at q89 through readout 0, deg",
+  "value": -1.3562,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 1 at q118 through readout 0, deg",
+  "value": 1.7939,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 2 at q128 through readout 0, deg",
+  "value": 94.0542,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 3 at q87 through readout 0, deg",
+  "value": -16.1213,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 4 at q106 through readout 0, deg",
+  "value": -35.896,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 5 at q110 through readout 0, deg",
+  "value": 3.4828,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 6 at q105 through readout 0, deg",
+  "value": -25.7253,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 7 at q108 through readout 0, deg",
+  "value": 7.24,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 8 at q91 through readout 0, deg",
+  "value": -18.3129,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 0 at q89 through readout 1, deg",
+  "value": -28.9909,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 1 at q118 through readout 1, deg",
+  "value": 1.5688,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 2 at q128 through readout 1, deg",
+  "value": 90.7686,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 3 at q87 through readout 1, deg",
+  "value": -20.5588,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 4 at q106 through readout 1, deg",
+  "value": -24.8043,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 5 at q98 through readout 1, deg",
+  "value": 12.2604,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 6 at q117 through readout 1, deg",
+  "value": -14.097,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 7 at q108 through readout 1, deg",
+  "value": 8.6151,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 8 at q111 through readout 1, deg",
+  "value": -17.4787,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 0 at q87 through readout 2, deg",
+  "value": -23.787,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 1 at q118 through readout 2, deg",
+  "value": 2.3174,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 2 at q128 through readout 2, deg",
+  "value": 92.1288,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 3 at q88 through readout 2, deg",
+  "value": -15.6579,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 4 at q106 through readout 2, deg",
+  "value": -27.2828,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 5 at q110 through readout 2, deg",
+  "value": 6.5476,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 6 at q117 through readout 2, deg",
+  "value": -11.6251,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 7 at q108 through readout 2, deg",
+  "value": 8.6433,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 8 at q98 through readout 2, deg",
+  "value": 21.5994,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 0 at q87 through readout 3, deg",
+  "value": -19.7206,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 1 at q118 through readout 3, deg",
+  "value": -3.1786,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 2 at q129 through readout 3, deg",
+  "value": -18.328,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 3 at q88 through readout 3, deg",
+  "value": -16.8793,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 4 at q106 through readout 3, deg",
+  "value": -35.6488,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 5 at q110 through readout 3, deg",
+  "value": 6.4204,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 6 at q105 through readout 3, deg",
+  "value": -25.2232,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 7 at q108 through readout 3, deg",
+  "value": 5.4217,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ },
+ {
+  "setting": "R=4: turn on data 8 at q98 through readout 3, deg",
+  "value": 19.3196,
+  "source": "dbv91off8rhs73bnfpog",
+  "how": "job K, slope over 1/2/4 readouts of that round's readout set"
+ }
+]

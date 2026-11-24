@@ -1,0 +1,41 @@
+HARDWARE FULL RUN, ibm_fez; calibration job dbv8jb6ps3fc73bk0s7g, main job dbv93b5arooc73fl4oqg
+job K (dbv8jb6ps3fc73bk0s7g): 10 readout settings; turn per readout on the data-holding qubits, median -17.85 deg; largest q120 -42.29, q120 -39.61, q97 -39.53, q98 -38.08, q91 -38.05, q91 -36.72
+readout today worse than the record (P(1|0) or P(0|1) above the record figure, beyond job P's 99% interval):
+  q93 P(1|0): record 0.0154, today 0.0400 (lower 99% bound 0.0243), 2.6x
+  q93 P(0|1): record 0.0154, today 0.0475 (lower 99% bound 0.0302), 3.1x
+  q94 P(0|1): record 0.0052, today 0.0162 (lower 99% bound 0.0070), 3.1x
+  q98 P(0|1): record 0.0059, today 0.0200 (lower 99% bound 0.0095), 3.4x
+  q122 P(0|1): record 0.0062, today 0.0175 (lower 99% bound 0.0078), 2.8x
+  q123 P(0|1): record 0.0065, today 0.0162 (lower 99% bound 0.0070), 2.5x
+  q141 P(1|0): record 0.0140, today 0.0338 (lower 99% bound 0.0195), 2.4x
+  q145 P(0|1): record 0.0107, today 0.0750 (lower 99% bound 0.0530), 7.0x
+  q147 P(0|1): record 0.0066, today 0.0188 (lower 99% bound 0.0087), 2.8x
+HARDWARE FULL RUN. distance-3 surface-code patch, X-basis memory, R = 1, 2, 3, 4; 16 copies x 2000 shots per arm per R; two-qubit gates (routing included) R=1: 70, R=2: 154, R=3: 240, R=4: 337
+decoder: the same exact minimum-weight matching on both arms (uniform weights, space-time graph of the X checks); logical = data column [0, 3, 6]
+R = 1:
+  CE  client, its own default compile: X detection 0.1915 (0.1884 to 0.1946); logical error 0.2041 (0.1982 to 0.2099)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.1604 (0.1581 to 0.1626); logical error 0.1576 (0.1526 to 0.1625)
+  OUTCOME OE minus CE, X detectors: -0.03112 (99% interval -0.03424 to -0.02800): BELOW
+  OUTCOME OE minus CE, logical error at R = 1: -0.04650 (99% interval -0.05368 to -0.03932): BELOW
+R = 2:
+  CE  client, its own default compile: X detection 0.2387 (0.2363 to 0.2410); Z detection 0.2156 (0.2122 to 0.2190); logical error 0.3319 (0.3267 to 0.3371)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.1904 (0.1879 to 0.1930); Z detection 0.2159 (0.2118 to 0.2201); logical error 0.2446 (0.2364 to 0.2528)
+  OUTCOME OE minus CE, X detectors: -0.04825 (99% interval -0.05149 to -0.04500): BELOW
+  control OE minus CE, Z detectors: +0.00035 (99% interval -0.00374 to +0.00444): CANNOT_TELL  (should be CONSISTENT)
+  OUTCOME OE minus CE, logical error at R = 2: -0.08738 (99% interval -0.09561 to -0.07914): BELOW
+R = 3:
+  CE  client, its own default compile: X detection 0.2898 (0.2872 to 0.2924); Z detection 0.2377 (0.2338 to 0.2416); logical error 0.4518 (0.4424 to 0.4612)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.2276 (0.2225 to 0.2328); Z detection 0.2362 (0.2312 to 0.2412); logical error 0.3602 (0.3491 to 0.3714)
+  OUTCOME OE minus CE, X detectors: -0.06217 (99% interval -0.06653 to -0.05781): BELOW
+  control OE minus CE, Z detectors: -0.00150 (99% interval -0.00469 to +0.00169): CANNOT_TELL  (should be CONSISTENT)
+  OUTCOME OE minus CE, logical error at R = 3: -0.09153 (99% interval -0.10260 to -0.08046): BELOW
+R = 4:
+  CE  client, its own default compile: X detection 0.2916 (0.2873 to 0.2959); Z detection 0.2263 (0.2235 to 0.2290); logical error 0.4370 (0.4237 to 0.4502)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.2206 (0.2170 to 0.2243); Z detection 0.2260 (0.2236 to 0.2284); logical error 0.3449 (0.3330 to 0.3568)
+  OUTCOME OE minus CE, X detectors: -0.07098 (99% interval -0.07394 to -0.06801): BELOW
+  control OE minus CE, Z detectors: -0.00030 (99% interval -0.00415 to +0.00355): CANNOT_TELL  (should be CONSISTENT)
+  OUTCOME OE minus CE, logical error at R = 4: -0.09209 (99% interval -0.10268 to -0.08151): BELOW
+logical error per round, CE (client, its own default compile): 0.2255 (99% interval 0.2037 to 0.2474), fit across R per copy
+logical error per round, OE (ours, rz(-turn) per data qubit per readout): 0.1293 (99% interval 0.1197 to 0.1389), fit across R per copy
+OUTCOME OE minus CE, logical error per round: -0.09623 (99% interval -0.11435 to -0.07810): BELOW  (BELOW = ours fails less often)
+  ratio, client over ours, per round: 1.74x (means of the per-copy fits; the outcome word above is the result)

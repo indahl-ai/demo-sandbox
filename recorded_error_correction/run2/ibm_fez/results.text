@@ -1,0 +1,35 @@
+HARDWARE FULL RUN, ibm_fez; calibration job dbvdumf82tmc73dut1g0, main job dbvdv1782tmc73dut20g
+job K (dbvdumf82tmc73dut1g0): 10 readout settings; turn per readout on the data-holding qubits, median -16.11 deg; largest q97 -42.62, q97 -40.50, q97 -39.85, q122 -39.68, q97 -38.98, q88 -38.73
+readout today worse than the record (P(1|0) or P(0|1) above the record figure, beyond job P's 99% interval):
+  q98 P(0|1): record 0.0085, today 0.0212 (lower 99% bound 0.0104), 2.5x
+  q144 P(0|1): record 0.0031, today 0.0100 (lower 99% bound 0.0032), 3.3x
+  q147 P(0|1): record 0.0087, today 0.0200 (lower 99% bound 0.0095), 2.3x
+HARDWARE FULL RUN. distance-3 surface-code patch, X-basis memory, R = 1, 2, 3, 4; 16 copies x 2000 shots per arm per R; two-qubit gates (routing included) R=1: 70, R=2: 154, R=3: 240, R=4: 337
+decoder: the same exact minimum-weight matching on both arms (uniform weights, space-time graph of the X checks); logical = data column [0, 3, 6]
+R = 1:
+  CE  client, its own default compile: X detection 0.1897 (0.1873 to 0.1921); logical error 0.1918 (0.1868 to 0.1968)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.1573 (0.1542 to 0.1605); logical error 0.1568 (0.1502 to 0.1634)
+  OUTCOME OE minus CE, X detectors: -0.03234 (99% interval -0.03574 to -0.02893): BELOW
+  OUTCOME OE minus CE, logical error at R = 1: -0.03500 (99% interval -0.04377 to -0.02623): BELOW
+R = 2:
+  CE  client, its own default compile: X detection 0.2361 (0.2328 to 0.2394); Z detection 0.2079 (0.2029 to 0.2128); logical error 0.3218 (0.3150 to 0.3286)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.1932 (0.1901 to 0.1964); Z detection 0.2067 (0.2014 to 0.2120); logical error 0.2453 (0.2401 to 0.2505)
+  OUTCOME OE minus CE, X detectors: -0.04286 (99% interval -0.04742 to -0.03830): BELOW
+  control OE minus CE, Z detectors: -0.00117 (99% interval -0.00765 to +0.00531): CANNOT_TELL  (should be CONSISTENT)
+  OUTCOME OE minus CE, logical error at R = 2: -0.07653 (99% interval -0.08302 to -0.07004): BELOW
+R = 3:
+  CE  client, its own default compile: X detection 0.2887 (0.2871 to 0.2903); Z detection 0.2315 (0.2281 to 0.2349); logical error 0.4487 (0.4399 to 0.4575)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.2244 (0.2202 to 0.2286); Z detection 0.2311 (0.2269 to 0.2352); logical error 0.3592 (0.3495 to 0.3688)
+  OUTCOME OE minus CE, X detectors: -0.06430 (99% interval -0.06779 to -0.06081): BELOW
+  control OE minus CE, Z detectors: -0.00043 (99% interval -0.00532 to +0.00446): CANNOT_TELL  (should be CONSISTENT)
+  OUTCOME OE minus CE, logical error at R = 3: -0.08956 (99% interval -0.09928 to -0.07985): BELOW
+R = 4:
+  CE  client, its own default compile: X detection 0.2565 (0.2539 to 0.2590); Z detection 0.2083 (0.2038 to 0.2128); logical error 0.4002 (0.3901 to 0.4103)
+  OE  ours, rz(-turn) per data qubit per readout: X detection 0.1951 (0.1924 to 0.1979); Z detection 0.2071 (0.2025 to 0.2116); logical error 0.3040 (0.2937 to 0.3144)
+  OUTCOME OE minus CE, X detectors: -0.06132 (99% interval -0.06519 to -0.05745): BELOW
+  control OE minus CE, Z detectors: -0.00123 (99% interval -0.00465 to +0.00220): CANNOT_TELL  (should be CONSISTENT)
+  OUTCOME OE minus CE, logical error at R = 4: -0.09619 (99% interval -0.10522 to -0.08716): BELOW
+logical error per round, CE (client, its own default compile): 0.1864 (99% interval 0.1724 to 0.2003), fit across R per copy
+logical error per round, OE (ours, rz(-turn) per data qubit per readout): 0.1019 (99% interval 0.0941 to 0.1098), fit across R per copy
+OUTCOME OE minus CE, logical error per round: -0.08441 (99% interval -0.09600 to -0.07281): BELOW  (BELOW = ours fails less often)
+  ratio, client over ours, per round: 1.83x (means of the per-copy fits; the outcome word above is the result)

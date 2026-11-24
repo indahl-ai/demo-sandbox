@@ -1,0 +1,8 @@
+HARDWARE approximation ratio = measured cut / noiseless QAOA cut (noiseless QAOA itself reaches 0.725 of the exact max cut); 12 copies; 97 of 111 edges kept (edges whose light cone holds a pair the record states above 5% are dropped from every arm)
+HARDWARE   N raw (client):                                  0.9334 (99% interval 0.9329 to 0.9338)
+HARDWARE   S fade from IBM's stated CZ error:               0.9415 (99% interval 0.9411 to 0.9420)
+HARDWARE   O fade from our measured CZ error (job P):       0.9536 (99% interval 0.9530 to 0.9542)  [job-P RB error sd 0.00012 included]
+HARDWARE   OUTCOME O minus S: +0.0121 (99% interval +0.0117 to +0.0125, paired by copy, RB error in quadrature; ABOVE = ours higher, BELOW = ours lower, CONSISTENT = inside +-0.001): ABOVE
+HARDWARE   OUTCOME O minus N: +0.0203 (99% interval +0.0199 to +0.0206, paired by copy, RB error in quadrature; ABOVE = ours higher, BELOW = ours lower, CONSISTENT = inside +-0.001): ABOVE
+HARDWARE   measured/stated CZ error over 111 pairs: median 2.38 (min 0.04 max 26.80)
+sources: record stamp 2026-11-18 23:27:58-05:00, job P dbv899ff8rhs73bnegsg, main job dbv899vf8rhs73bnegtg; options main: twirling.enable_gates=False twirling.enable_measure=False dynamical_decoupling.enable=False resilience=none (SamplerV2 has no resilience) default_shots=Unset
