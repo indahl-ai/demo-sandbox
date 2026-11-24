@@ -41,6 +41,8 @@ def cmd_replay(a):
         def backend(self, name): return D.fake_backend()
     V3.get_service = lambda: Offline()
     print('REPLAY of recorded run %d on %s. Nothing is sent anywhere; no key is used.' % (a.run, CHIPS[a.chip]))
+    print('Recorded hardware counts and benchmarking data; the circuits are rebuilt on a stand-in chip only to count depth and two-qubit gates.')
+    if a.chip == 'marrakesh': print('NOTE: marrakesh is our layout-fault control. Its fade scale sits on the edge of the search range, so its improvement is not a calibration result.')
     V3.mode_analyze()
     shutil.rmtree(work, ignore_errors=True)
 

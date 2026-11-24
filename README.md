@@ -24,8 +24,14 @@ Only calls to IBM, made with your key. Your key is read from the environment var
 Nothing is sent to us. Your runs are saved in `my_runs/` here and nowhere else. To stop everything, delete the container.
 
 ## What it costs you
-Replay: nothing. A live run: about 370 seconds (a little over 6 minutes) of IBM QPU time on one chip. `check` prints the estimate for your chip and your remaining time before you commit, and `fire` refuses if your remaining time is less than the estimate.
+Replay: nothing. A live run: about 140 seconds (a little over 2 minutes) of IBM QPU time on one chip. That is what IBM billed for all six of our recorded runs (a 4 s calibration job plus a 136 to 139 s main job; the job IDs are in `recorded/`). `check` prints a more cautious estimate of about 370 s for your chip and your remaining time, and `fire` refuses if your remaining time is less than that estimate, so a plan with 140 to 370 s left will be refused even though the run would fit. `check` is free to run.
 On RunPod, a small CPU pod is enough; no GPU is used.
+
+## What the replay is, exactly
+It re-analyzes the recorded hardware counts and the recorded randomized-benchmarking data. The only stand-in is the chip's shape: the circuits are rebuilt on a fake IBM chip to count their depth and two-qubit gates, which the fit needs. All twelve published numbers (six runs, client and ours) come out the same to the digits we publish.
+
+## Read the marrakesh runs differently
+On ibm_marrakesh the fade scale sits on the edge of its search range, which means the error there is a layout fault, not a fade. We include it as the layout-fault control. Its improvement is not a calibration result and should not be quoted as one. Kingston and fez are the calibrated chips.
 
 ## What it does not claim
 It shows one circuit, one option, on three IBM chips, in two recorded runs. It does not say your own circuit will improve by the same factor.
