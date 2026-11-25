@@ -59,11 +59,12 @@ class _Tee(io.TextIOBase):
     def flush(self): self.a.flush()
 
 
-def _with_summary(demo, chip, what, fn):
-    """Run fn with its output shown as usual, then print a RESULT box that restates the printed headline in plain words."""
+def _with_summary(demo, chip, what, fn, run=None):
+    """Run fn with its output shown as usual, then print a RESULT box that restates the printed headline in plain words.
+    For a replay (run given) the recorded job IDs and IBM options are printed from the recorded files just before the box."""
     t = _Tee(sys.stdout)
     with contextlib.redirect_stdout(t): r = fn()
-    print(summary.render(demo, chip, what, t.buf.getvalue()))
+    print(summary.render(demo, chip, what, t.buf.getvalue(), run=run))
     return r
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -86,16 +87,18 @@ def cmd_replay(a):
     src = os.path.join(HERE, 'recorded', 'run%d' % a.run, 'state_v3_%s.json' % CHIPS[a.chip])
     if not os.path.exists(src): sys.exit('no recorded run: ' + src)
     work = os.path.join(HERE, '.replay_tmp'); os.makedirs(work, exist_ok=True)
-    tmp = os.path.join(work, os.path.basename(src)); shutil.copyfile(src, tmp)   # the recorded file itself is never opened for writing
-    use_state(V2, V3, tmp)
-    class Offline:                                       # the analysis only needs the chip's shape to rebuild the circuits, so a fake chip stands in
-        def backend(self, name): return D.fake_backend()
-    V3.get_service = lambda: Offline()
-    print('REPLAY of recorded run %d on %s. Nothing is sent anywhere; no key is used.' % (a.run, CHIPS[a.chip]))
-    print('Recorded hardware counts and benchmarking data; the circuits are rebuilt on a stand-in chip only to count depth and two-qubit gates.')
-    if a.chip == 'marrakesh': print('NOTE: marrakesh is our layout-fault control. Its fade scale sits on the edge of the search range, so its improvement is not a calibration result.')
-    V3.mode_analyze()
-    shutil.rmtree(work, ignore_errors=True)
+    try:                                                 # 25 Nov 2026: a crashed replay left its copy of the recorded state behind; removed in every case now
+        tmp = os.path.join(work, os.path.basename(src)); shutil.copyfile(src, tmp)   # the recorded file itself is never opened for writing
+        use_state(V2, V3, tmp)
+        class Offline:                                   # the analysis only needs the chip's shape to rebuild the circuits, so a fake chip stands in
+            def backend(self, name): return D.fake_backend()
+        V3.get_service = lambda: Offline()
+        print('REPLAY of recorded run %d on %s. Nothing is sent anywhere; no key is used.' % (a.run, CHIPS[a.chip]))
+        print('Recorded hardware counts and benchmarking data; the circuits are rebuilt on a stand-in chip only to count depth and two-qubit gates.')
+        if a.chip == 'marrakesh': print('NOTE: marrakesh is our layout-fault control. Its fade scale sits on the edge of the search range, so its improvement is not a calibration result.')
+        V3.mode_analyze()
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
 
 
 def live(a):
@@ -141,7 +144,7 @@ def other_demo(demo, argv):
     sys.path.insert(0, folder); os.chdir(folder)
     import sandbox_entry as E
     if a.cmd == 'fire' and not a.yes: sys.exit('This submits jobs on your IBM account and uses your IBM time. Run "check" first, then add --yes to fire.')
-    if a.cmd == 'replay': return _with_summary(demo, a.chip, 'recorded run %d (replay)' % a.run, lambda: E.replay(a.chip, a.run))
+    if a.cmd == 'replay': return _with_summary(demo, a.chip, 'recorded run %d (replay)' % a.run, lambda: E.replay(a.chip, a.run), run=a.run)
     if a.cmd == 'analyze' and not a.pilot: return _with_summary(demo, a.chip, 'your live run', lambda: E.analyze(a.chip))
     if a.pilot:
         if demo != 'optimization' or a.cmd not in ('fire', 'fetch', 'analyze'): sys.exit('--pilot applies to optimization fire, fetch and analyze only')
@@ -152,9 +155,18 @@ def other_demo(demo, argv):
     return fn(a.chip)
 
 
+def chip_of(argv):
+    """The chip as argparse reads it: `--chip fez` or `--chip=fez` (25 Nov 2026: the second form left the hints naming kingston)."""
+    chip = 'kingston'
+    for i, x in enumerate(argv):
+        if x == '--chip' and i + 1 < len(argv): chip = argv[i + 1]
+        elif x.startswith('--chip='): chip = x.split('=', 1)[1]
+    return chip
+
+
 def main():
     demo = sys.argv[1] if len(sys.argv) > 1 and sys.argv[1] in OTHER + ('finance',) else ('finance' if len(sys.argv) > 1 and sys.argv[1] in ('replay', 'check', 'fire', 'fetch', 'analyze') else None)
-    chip = sys.argv[sys.argv.index('--chip') + 1] if '--chip' in sys.argv[:-1] else 'kingston'
+    chip = chip_of(sys.argv)
     out = _Hints(sys.stdout, demo, chip)
     try:
         with contextlib.redirect_stdout(out): return _main()
@@ -178,7 +190,8 @@ def _main():
         if name == 'fire': p.add_argument('--yes', action='store_true')
     a = ap.parse_args()
     if a.cmd in ('replay', 'analyze'):
-        return _with_summary('finance', a.chip, ('recorded run %d (replay)' % a.run) if a.cmd == 'replay' else 'your live run', lambda: a.fn(a))
+        return _with_summary('finance', a.chip, ('recorded run %d (replay)' % a.run) if a.cmd == 'replay' else 'your live run', lambda: a.fn(a),
+                             run=a.run if a.cmd == 'replay' else None)
     a.fn(a)
 
 

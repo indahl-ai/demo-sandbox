@@ -57,5 +57,30 @@ for _err, _pct in re.findall(r'average error per copy ([\d.]+) \(([\d.]+)% of th
     if _err == 'x' or abs(100 * float(_err) / 8.2543 - float(_pct)) > 0.05: fails.append('finance box percent not error/exact: %r' % _box)
 if '% off' in _box or '15.5x lower' not in _box: fails.append('finance box wording: %r' % _box)
 
+# 25 Nov: `--chip=fez` is read by argparse, but the hint rewrite read only `--chip fez` and named kingston in the next-step commands.
+for _argv in (['chemistry', 'check', '--chip=fez'], ['chemistry', 'check', '--chip', 'fez']):
+    if sandbox.chip_of(_argv) != 'fez': fails.append('chip_of(%r) = %r' % (_argv, sandbox.chip_of(_argv)))
+_h = sandbox._hints('Next: python demo.py --fetch', 'chemistry', sandbox.chip_of(['chemistry', 'fire', '--chip=marrakesh', '--yes']))
+if 'python sandbox.py chemistry fetch --chip marrakesh' not in _h: fails.append('hint with --chip=marrakesh: %r' % _h)
+
+# 25 Nov: a finance replay that crashed left .replay_tmp (a copy of the recorded state) in the repository folder.
+import types, shutil as _sh
+_work = os.path.join(HERE, '.replay_tmp'); _sh.rmtree(_work, ignore_errors=True)
+def _boom(): raise RuntimeError('replay crashed on purpose (test)')
+_V = types.SimpleNamespace(mode_analyze=_boom, STATE3=None, get_service=None); _V2 = types.SimpleNamespace(STATE2=None)
+_load = sandbox.load; sandbox.load = lambda chip: (types.SimpleNamespace(fake_backend=lambda: None), _V2, _V)
+try: sandbox.cmd_replay(types.SimpleNamespace(chip='fez', run=1))
+except RuntimeError: pass
+finally: sandbox.load = _load
+if os.path.exists(_work): fails.append('.replay_tmp left behind after a crashed replay'); _sh.rmtree(_work, ignore_errors=True)
+
+# 25 Nov: the box footer once claimed job IDs and settings for every demonstration. It names only what is printed above it.
+_b = _S._box('t', ['x'], 'no ids here')
+if 'job IDs' in _b or 'options' in _b: fails.append('footer claims job IDs or options that were not printed: %r' % _b)
+for _d in ('finance', 'chemistry', 'simulation', 'error_correction', 'optimization', 'ai_kernels'):
+    _r = '\n'.join(_S.recorded(_d, 'fez', 1))
+    if not re.search(r'\b[a-z0-9]{20}\b', _r): fails.append('%s replay prints no recorded job ID' % _d)
+    if _d == 'error_correction' and 'read back' in _r: fails.append('error_correction claims options its files do not hold')
+
 print('\n'.join(fails) if fails else 'test_cli: every command reaches its code with the options typed (6 demonstrations)')
 sys.exit(1 if fails else 0)
