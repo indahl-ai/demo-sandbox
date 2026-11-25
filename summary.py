@@ -27,9 +27,13 @@ def finance(t):
     if not (ex and n and o and w): return None
     e = float(ex); pn = 100 * float(n[3]) / e; po = 100 * float(o[3]) / e
     return ['Option price. Exact answer: %s' % ex,
-            'Default run (the client\'s settings):  %s  (99%% interval %s to %s), %.1f%% off' % (n[0], n[1], n[2], pn),
-            'Calibrated run (ours):                %s  (99%% interval %s to %s), %.1f%% off' % (o[0], o[1], o[2], po),
-            'Outcome against the default run: %s (BELOW = ours closer to the exact price),' % w[2],
+            # 25 Nov: the percent is the AVERAGE ERROR per copy as a share of the price (what the page shows), never the gap of the
+            # averaged price: "7.9974, 12.7% off" read as wrong arithmetic (7.9974 is 3.1% from 8.2543). Both now say what they are.
+            'Default run (the client\'s settings):',
+            '  average error per copy %s (%.1f%% of the price); averaged price %s (99%% interval %s to %s)' % (n[3], pn, n[0], n[1], n[2]),
+            'Calibrated run (ours):',
+            '  average error per copy %s (%.1f%% of the price); averaged price %s (99%% interval %s to %s)' % (o[3], po, o[0], o[1], o[2]),
+            'Error %.1fx lower. Outcome against the default run: %s (BELOW = ours closer to the exact price),' % (float(n[3]) / float(o[3]), w[2]),
             '  99%% interval of the error difference %s to %s.' % (w[0], w[1])]
 
 
