@@ -25,7 +25,7 @@ Factors on the chips table (run 1): 2.5x, 15.5x, 5.3x. The RESULT box prints "Er
 | kingston | run 1 calibrated | 0.211 (2.55%) | 0.2108 (0.211, 2.55%) | PASS |
 | kingston | run 2 default | 0.510 (6.2%) | 0.5104 (0.510, 6.2%) | PASS |
 | kingston | run 2 calibrated | 0.001 (0.01%) | 0.0010 (0.001, 0.01%) | PASS |
-| fez | run 1 default | 0.693 (8.4%) | 0.6925 (unrounded 0.69249: 0.692, 8.4%) | FAIL |
+| fez | run 1 default | 0.692 (8.4%) | 0.6925 (unrounded 0.69249: 0.692, 8.4%) | PASS |
 | fez | run 1 calibrated | 0.030 (0.36%) | 0.0298 (0.030, 0.36%) | PASS |
 | fez | run 2 default | 1.465 (17.8%) | 1.4654 (1.465, 17.8%) | PASS |
 | fez | run 2 calibrated | 0.061 (0.75%) | 0.0615 (unrounded 0.06150: 0.061, 0.75%) | PASS |
@@ -35,7 +35,7 @@ Factors on the chips table (run 1): 2.5x, 15.5x, 5.3x. The RESULT box prints "Er
 | marrakesh | run 2 calibrated | 0.359 (4.34%) | 0.3586 (0.359, 4.34%) | PASS |
 
 ## What does not reproduce
-One pooled cell: fez run 1 default. The page shows 0.693; the analysis gives 0.69249, which is 0.692 to three digits. Cause: double rounding (the four-digit print 0.6925 was rounded again to three). Its percent, 8.4%, is unchanged. The figure is listed here as it stands and is not changed in this repository.
+One pooled cell, fez run 1 default, was published as 0.693 from double rounding (the four-digit print 0.6925 rounded again to three). The analysis gives 0.69249. The page was corrected to 0.692 on 25 Nov 2026. Its percent, 8.4%, is unchanged.
 
 ## How the replay works, and its one stand-in
 Recorded: the stated-record gate errors, the benchmarking counts and the per-copy hit counts from each run, in `recorded/run1/` and `recorded/run2/`. The fade scale per chip was frozen from that chip's earlier job before these runs. Stand-in: the circuits are rebuilt on a fake IBM backend of the same name only to count depth and two-qubit gates.
