@@ -6,6 +6,7 @@ import subprocess, sys, os, nbformat as nbf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = 'https://github.com/indahl-ai/demo-sandbox'
+TAG = 'v1.0'          # the notebook clones this release tag (a fixed commit), never moving main; the tag must point at a commit holding this notebook
 md = nbf.v4.new_markdown_cell
 code = nbf.v4.new_code_cell
 
@@ -17,13 +18,13 @@ Six demonstrations, each the same circuit on the same IBM chip run two ways: the
 **1. Replay** a recorded hardware result. No key, no IBM time. The finance replay below is already printed: select **Runtime > Run all** (Colab) or run the cells in order to recompute it here.
 **2. Live run** on your own IBM Quantum account (optional), further down.
 
-The code is the public repository [github.com/indahl-ai/demo-sandbox](%s). On your own machine, in Colab or on a RunPod pod you start yourself, nothing is sent to Heuremen. On a sandbox hosted by QIA, the container is run by the operator and the private link opens a root session in it: use replay only there, or a key revoked afterwards. Heuremen is not affiliated with IBM.""" % REPO),
+The code is the public repository [github.com/indahl-ai/demo-sandbox](%s) at release tag `%s`: the setup cell downloads that fixed commit, so a later change to the repository never runs here. On your own machine, in Colab or on a RunPod pod you start yourself, nothing is sent to Heuremen. On a sandbox hosted by QIA, the container is run by the operator and the private link opens a root session in it: use replay only there, or a key revoked afterwards. Heuremen is not affiliated with IBM.""" % (REPO, TAG)),
 code("""# Setup: about one minute the first time. Downloads the public repository and installs four libraries (qiskit, qiskit-ibm-runtime, numpy, scipy).
 import os, sys, subprocess
 if not os.path.exists('sandbox.py'):
     if os.path.exists('/workspace/demo/sandbox.py'): os.chdir('/workspace/demo')
     else:
-        if not os.path.exists('demo-sandbox'): subprocess.run(['git', 'clone', '-q', '%s'], check=True)
+        if not os.path.exists('demo-sandbox'): subprocess.run(['git', 'clone', '-q', '--depth', '1', '--branch', '%s', '%s'], check=True)   # release tag, a fixed commit
         os.chdir('demo-sandbox')
 PY = os.path.abspath('.venv/bin/python') if os.path.exists('.venv/bin/python') else sys.executable
 if subprocess.run([PY, '-c', 'import qiskit, qiskit_ibm_runtime, numpy, scipy'], capture_output=True).returncode:   # install only what is missing
@@ -33,7 +34,7 @@ def sandbox(*args):
     p = subprocess.Popen([PY, 'sandbox.py', *args], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
     for line in p.stdout: print(line, end='')
     p.wait()
-print('Ready in', os.getcwd())""" % REPO),
+print('Ready in', os.getcwd())""" % (TAG, REPO)),
 md("""## Choose a demonstration
 `finance`, `chemistry`, `optimization`, `simulation`, `error_correction` or `ai_kernels`. Chips: `kingston`, `fez`, `marrakesh`. Recorded runs: `1` or `2`."""),
 code("""DEMO = 'finance'

@@ -23,6 +23,8 @@ On RunPod the template does this for you. Setup takes about a minute after the p
 
 Elsewhere: `git clone https://github.com/indahl-ai/demo-sandbox && cd demo-sandbox && bash start.sh && source .venv/bin/activate`
 
+Releases are tagged. The notebook (`QIA_demonstrations.ipynb`, for Colab and hosted sandboxes) clones release tag `v1.0`, a fixed commit, never the moving `main`. To use the same code here: `git clone --branch v1.0 https://github.com/indahl-ai/demo-sandbox`.
+
 ## Step 2: replay a recorded result. No key, no network, no IBM time.
     python sandbox.py chemistry replay
     python sandbox.py finance replay --chip fez --run 1
