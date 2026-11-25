@@ -41,7 +41,9 @@ Options: `--chip kingston`, `fez` or `marrakesh`, and `--run 1` or `2`. Without 
 A live run is saved on this machine under the repository folder (`analyze` prints the path). Each new terminal or SSH session needs the key entered again (and `DEMO_INSTANCE` set again, if used).
 
 ## What leaves this machine
-Only calls to IBM, made with your key, plus package downloads at setup. Your key is read from the environment variable, never printed and never written to a file. Nothing is sent to us. To stop everything, delete the container.
+On your own machine, in Colab, or on a RunPod pod you start yourself: only calls to IBM, made with your key, plus package downloads at setup. Your key is read from the environment variable, never printed and never written to a file. Nothing is sent to Heuremen. To stop everything, delete the container.
+
+On a sandbox hosted by QIA, the container is run by the operator, and the private link opens a root session in it. Use replay only there, or an IBM key you revoke afterwards.
 
 ## For AI agents and scripts
 Deploy the public RunPod template `kpyzbrz9gs` on a CPU pod (`cpu3c-2-4` is enough) through RunPod's API, with your SSH public key in the pod's `PUBLIC_KEY` environment variable. Wait until `/root/setup.log` contains `SETUP COMPLETE`, then run the commands above over SSH. Pass the IBM key over SSH standard input into `IBM_QUANTUM_TOKEN` rather than on a command line. Terminate the pod when finished.

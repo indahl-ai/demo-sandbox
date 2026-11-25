@@ -17,7 +17,7 @@ Six demonstrations, each the same circuit on the same IBM chip run two ways: the
 **1. Replay** a recorded hardware result. No key, no IBM time. The finance replay below is already printed: select **Runtime > Run all** (Colab) or run the cells in order to recompute it here.
 **2. Live run** on your own IBM Quantum account (optional), further down.
 
-The code is the public repository [github.com/indahl-ai/demo-sandbox](%s). Nothing is sent to Heuremen. Heuremen is not affiliated with IBM.""" % REPO),
+The code is the public repository [github.com/indahl-ai/demo-sandbox](%s). On your own machine, in Colab or on a RunPod pod you start yourself, nothing is sent to Heuremen. On a sandbox hosted by QIA, the container is run by the operator and the private link opens a root session in it: use replay only there, or a key revoked afterwards. Heuremen is not affiliated with IBM.""" % REPO),
 code("""# Setup: about one minute the first time. Downloads the public repository and installs four libraries (qiskit, qiskit-ibm-runtime, numpy, scipy).
 import os, sys, subprocess
 if not os.path.exists('sandbox.py'):
@@ -61,15 +61,21 @@ else: print('Not submitted. Set LIVE = True above and USE_MY_IBM_TIME = True her
 md("""### Collect and compare
 Checks the jobs every 30 seconds and prints the comparison when they finish (usually a few minutes, longer if the chip has a queue)."""),
 code("""import time
+res = None
 for i in range(60 if LIVE and USE_MY_IBM_TIME else 0):
-    out = subprocess.run([PY, 'sandbox.py', DEMO, 'fetch', '--chip', CHIP], capture_output=True, text=True).stdout
+    f = subprocess.run([PY, 'sandbox.py', DEMO, 'fetch', '--chip', CHIP], capture_output=True, text=True)
+    out = f.stdout
     print(time.strftime('%H:%M:%S'), out.strip().splitlines()[-1] if out.strip() else '')
+    if f.returncode and 'not finished' not in f.stdout + f.stderr:   # a real failure, not a job still running: show it and stop
+        print(out[-3000:]); print(f.stderr[-3000:])
+        raise RuntimeError('fetch failed (return code %d); stopped. The error is printed above.' % f.returncode)
     res = subprocess.run([PY, 'sandbox.py', DEMO, 'analyze', '--chip', CHIP], capture_output=True, text=True)
     if ' RESULT ' in res.stdout and 'No summary' not in res.stdout:
         print(res.stdout); break
     time.sleep(30)
 else:
-    print('Nothing to collect yet.' if not (LIVE and USE_MY_IBM_TIME) else 'Not finished after 30 minutes. Run this cell again later.')"""),
+    print('Nothing to collect yet.' if not (LIVE and USE_MY_IBM_TIME) else 'Not finished after 30 minutes. Run this cell again later.')
+    if res is not None and res.returncode: print('Last analyze error output:'); print(res.stderr[-3000:])"""),
 md("""Delete the session when finished (Colab: **Runtime > Disconnect and delete runtime**). Everything in it, including your live run, is removed."""),
 ]
 

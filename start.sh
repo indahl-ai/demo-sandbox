@@ -13,15 +13,18 @@ else
   uv pip install --quiet --python .venv/bin/python -r requirements.txt
 fi
 echo
+JUP="jupyterlab==4.6.6 ipykernel==7.4.0"   # pinned, like requirements.txt
 if [ -n "${JUPYTER_PASSWORD:-}" ]; then   # hosted sandboxes only: the base CPU image has no JupyterLab, so it runs from this environment
-  .venv/bin/python -m pip install --quiet --no-cache-dir --root-user-action=ignore jupyterlab ipykernel 2>/dev/null || uv pip install --quiet --python .venv/bin/python jupyterlab ipykernel
-  nohup .venv/bin/jupyter lab --allow-root --no-browser --port=8888 --ip=0.0.0.0 --ServerApp.token="$JUPYTER_PASSWORD" --ServerApp.allow_origin='*' \
+  .venv/bin/python -m pip install --quiet --no-cache-dir --root-user-action=ignore $JUP 2>/dev/null || uv pip install --quiet --python .venv/bin/python $JUP
+  nohup .venv/bin/jupyter lab --allow-root --no-browser --port=8888 --ip=0.0.0.0 --ServerApp.token="$JUPYTER_PASSWORD" \
         --ServerApp.root_dir=/workspace --ServerApp.preferred_dir=/workspace/demo > /root/jupyter.log 2>&1 &
   echo "JupyterLab started on port 8888"
+  echo "This container is run by its operator. The private link opens a root session in it: use replay only here, or an IBM key you revoke afterwards."
 fi
-echo "SETUP COMPLETE. Quantum Idle Audit demonstrations are ready in /workspace/demo"
-echo "  cd /workspace/demo && source .venv/bin/activate"
+HERE_DIR="$(pwd)"
+echo "SETUP COMPLETE. Quantum Idle Audit demonstrations are ready in $HERE_DIR"
+echo "  cd $HERE_DIR && source .venv/bin/activate"
 echo "  Replay a recorded result (no key, no IBM time):   python sandbox.py <demo> replay"
 echo "      <demo> = finance, chemistry, optimization, simulation, error_correction or ai_kernels"
 echo "  Live run on your own IBM account: see README.md or https://quantumidleaudit.com/runpod-sandbox"
-echo "Everything stays in this container. Read README.md first."
+if [ -z "${JUPYTER_PASSWORD:-}" ]; then echo "Everything stays on this machine. Read README.md first."; else echo "Read README.md first."; fi
