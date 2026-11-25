@@ -6,7 +6,7 @@ import subprocess, sys, os, nbformat as nbf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = 'https://github.com/indahl-ai/demo-sandbox'
-TAG = 'v1.0'          # the notebook clones this release tag (a fixed commit), never moving main; the tag must point at a commit holding this notebook
+TAG = 'v1.1'          # the notebook clones this release tag (a fixed commit), never moving main; the tag must point at a commit holding this notebook
 md = nbf.v4.new_markdown_cell
 code = nbf.v4.new_code_cell
 

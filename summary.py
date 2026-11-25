@@ -6,7 +6,8 @@ import json, os, re
 
 W = 78
 HERE = os.path.dirname(os.path.abspath(__file__))
-DEFAULT = 'Default run (raw counts, no error correction: the client\'s settings):'
+DEFAULT = 'Default run (raw counts, no error mitigation: the client\'s settings):'
+DEFAULT_EC = 'Default compile (the client\'s own compile and decoder, raw counts):'   # 25 Nov: the EC client arm runs the code itself, so "no error correction" misread
 
 
 def _f(pat, text, n=1):
@@ -134,7 +135,7 @@ def error_correction(t):
     r = _f(r'ratio, client over ours, per round: ([\d.]+x)', t)
     if not (c and o and w): return None
     return ['Logical qubit failures per round (lower is better)',
-            DEFAULT, '  %s  (99%% interval %s to %s)' % c,
+            DEFAULT_EC, '  %s  (99%% interval %s to %s)' % c,
             'Calibrated layout (ours):', '  %s  (99%% interval %s to %s)' % o,
             ('Failures per round %s lower. ' % r if r else '') + 'Outcome: %s (BELOW = ours fails less often),' % w[3],
             '  99%% interval of the difference %s to %s.' % (w[1], w[2])]
