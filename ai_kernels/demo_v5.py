@@ -2,7 +2,7 @@
 
 Las Ecuaciones / Pack Q #27: D = S + P x crossing; fit the shared part S and the scaling part P separately, because an offset divided
 by a strength manufactures a trend. The v4 pilot measured P (the diagonal, K = 1) and divided the chip's all-zeros floor S by it:
-the overshoot on all three chips (19 Nov, CHECKS.md). v5 measures S too, with a floor anchor of known exact K near 0.
+the overshoot on all three chips (19 Nov). v5 measures S too, with a floor anchor of known exact K near 0.
 
 Job A (EARLIER than the main, saved before stage 2 is submitted), all compiled once from the v4 parameterized template (two
 parameter vectors, angles bound after compile, 54 CZ asserted on every bound circuit):

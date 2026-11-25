@@ -3,7 +3,7 @@
 Client arm: objective qubit chosen from the vendor's published record, MLAE with no noise term.
 Our arm:    objective qubit chosen from a fresh readout block, MLAE with a fade term at the
             MEASURED CZ error (RB ratio x stated) and readout correction from that block.
-Modes: --test | --dry | --fire | --fetch | --analyze   (see PLAN.md). Never prints keys/CRNs."""
+Modes: --test | --dry | --fire | --fetch | --analyze. Never prints keys/CRNs."""
 import os, sys, json, math, time, argparse
 import numpy as np
 from qiskit import QuantumCircuit, transpile

@@ -6,7 +6,7 @@ Three readings of the SAME shots:
 Job P: all-0 / all-1 readout calibration on the layout's qubits, plus the readout check (qubits worse today than the record says).
 Main job: the client's QAOA circuit, COPIES copies. Approximation ratio per reading with a 99% interval from the copies; outcome word for O minus R.
 Modes: --test --dry --fire --fetch --analyze.   Env IBM_QUANTUM_TOKEN (your own key) / DEMO_INSTANCE.
-Never prints a key or a CRN. Nothing here is committed or pushed. The static-ZZ fold (option c) is NOT built: see PLAN.md."""
+Never prints a key or a CRN. The static-ZZ fold (option c) is not built."""
 import argparse, json, math, os, sys, time
 import numpy as np
 
