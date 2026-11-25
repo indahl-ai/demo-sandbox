@@ -26,7 +26,9 @@ if not os.path.exists('sandbox.py'):
         if not os.path.exists('demo-sandbox'): subprocess.run(['git', 'clone', '-q', '%s'], check=True)
         os.chdir('demo-sandbox')
 PY = os.path.abspath('.venv/bin/python') if os.path.exists('.venv/bin/python') else sys.executable
-if PY == sys.executable: subprocess.run([PY, '-m', 'pip', 'install', '-q', '--disable-pip-version-check', '-r', 'requirements.txt'], check=True)
+if subprocess.run([PY, '-c', 'import qiskit, qiskit_ibm_runtime, numpy, scipy'], capture_output=True).returncode:   # install only what is missing
+    if subprocess.run([PY, '-m', 'pip', '--version'], capture_output=True).returncode: subprocess.run([PY, '-m', 'ensurepip', '-q'], check=True)
+    subprocess.run([PY, '-m', 'pip', 'install', '-q', '--disable-pip-version-check', '-r', 'requirements.txt'], check=True)
 def sandbox(*args):
     p = subprocess.Popen([PY, 'sandbox.py', *args], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
     for line in p.stdout: print(line, end='')
