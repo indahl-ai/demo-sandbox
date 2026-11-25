@@ -44,5 +44,18 @@ if not m or 'add --yes' not in m: fails.append('finance fire without --yes: %r' 
 m = run(['finance', 'fire', '--chip', 'fez', '--yes'])
 if not m or 'IBM_QUANTUM_TOKEN' not in m: fails.append('finance fire --yes without a key: %r' % m)
 
+# 25 Nov: the finance RESULT box once printed "7.9974 ... 12.7% off" (the percent was the average error, the number beside it the averaged
+# price, 3.1% off). Every percent in the box must sit beside the error it is a share of, and equal error / exact price.
+import re, importlib as _il
+_S = _il.import_module('summary')
+_t = """exact price 8.2543
+  N no fade (client): price 7.9974 (99% interval 7.4620 to 8.5329), mean abs error 1.0457; pooled
+  O fade at our measured CZ error: price 8.2827 (99% interval 8.2455 to 8.3200), mean abs error 0.0674; pooled
+  OUTCOME ours minus CLIENT N (headline; error difference, 99% interval -1.1785 to -0.7781; BELOW = ours better): BELOW"""
+_box = '\n'.join(_S.finance(_t) or [])
+for _err, _pct in re.findall(r'average error per copy ([\d.]+) \(([\d.]+)% of the price\)', _box) or [('x', 'x')]:
+    if _err == 'x' or abs(100 * float(_err) / 8.2543 - float(_pct)) > 0.05: fails.append('finance box percent not error/exact: %r' % _box)
+if '% off' in _box or '15.5x lower' not in _box: fails.append('finance box wording: %r' % _box)
+
 print('\n'.join(fails) if fails else 'test_cli: every command reaches its code with the options typed (6 demonstrations)')
 sys.exit(1 if fails else 0)
