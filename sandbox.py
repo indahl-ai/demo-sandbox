@@ -178,7 +178,21 @@ def main():
         out.flush()
 
 
+def my_circuit(argv):
+    """27 Nov 2026: check the buyer's OWN circuit's gates against the chip today (my_circuit/check_circuit.py). The circuit stays on this machine."""
+    ap = argparse.ArgumentParser(prog='sandbox.py mycircuit', description='Check your own circuit\'s gates against the chip as it is today.')
+    ap.add_argument('cmd', choices=['plan', 'fire', 'fetch', 'analyze']); ap.add_argument('file', help='your circuit as an OpenQASM 2 or 3 file')
+    ap.add_argument('--backend', default='ibm_kingston', help='any IBM processor your account can use, e.g. ibm_kingston')
+    ap.add_argument('--fake', choices=sorted(CHIPS), help='plan only: a stand-in chip, offline, no key')
+    ap.add_argument('--opt', type=int, default=1, choices=(0, 1, 2, 3), help='transpiler optimization level for the layout (default 1)')
+    ap.add_argument('--yes', action='store_true')
+    a = ap.parse_args(argv)
+    sys.path.insert(0, os.path.join(HERE, 'my_circuit')); import check_circuit as C
+    return C.run(a.cmd, a.file, a.backend, yes=a.yes, fake=a.fake, opt=a.opt)
+
+
 def _main():
+    if len(sys.argv) > 1 and sys.argv[1] == 'mycircuit': return my_circuit(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] in OTHER: return other_demo(sys.argv[1], sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] == 'finance': sys.argv.pop(1)
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
