@@ -68,11 +68,12 @@ Each demonstration shows one circuit on three IBM chips in two recorded runs. A 
 
 An independent record of a dedicated IBM machine's readout and T1, measured on the owner's own account and set beside the record IBM publishes.
 
-### The record so far, on the public Heron r2 chips. No key, no network.
+### The record so far, on the public Heron r2 and Nighthawk r2 chips. No key, no network.
 
     python sandbox.py owner history --family heron_r2
+    python sandbox.py owner history --family nighthawk_r2
 
-Replays the calibration readings Heuremen has published for ibm_fez, ibm_kingston and ibm_marrakesh since 30 Oct 2026, from a read-only extract in `owner/recorded/`. Each reading names its published file, `https://quantumidleaudit.com/qia/cal/<file>.json`. Per chip it prints the runs and qubit readings, the readout readings that read off IBM's record (worse than stated), the distinct qubits that did so at least once, the readings at 10x IBM's figure or more, the age of IBM's readout record when each run started, the ten worst single readings, and a qubit map. The headline counts are readout only. T1 is printed apart, both ways.
+Replays the calibration readings Heuremen has published for ibm_fez, ibm_kingston and ibm_marrakesh since 30 Oct 2026 (Heron r2), or for ibm_phoenix and ibm_chicago (Nighthawk r2, whose map is printed by qubit number), from a read-only extract in `owner/recorded/`. Each reading names its published file, `https://quantumidleaudit.com/qia/cal/<file>.json`. Per chip it prints the runs and qubit readings, the readout readings that read off IBM's record (worse than stated), the distinct qubits that did so at least once, the readings at 10x IBM's figure or more, the age of IBM's readout record when each run started, the ten worst single readings, and a qubit map. The headline counts are readout only. T1 is printed apart, both ways.
 
 A reading counts as off when IBM's figure and the measured value do not overlap. Both get an exact 99.9% interval, since IBM's readout figures are themselves counts out of 1,024 or 4,096 shots. Where a run was re-read under a later rule (published as `<job>n3`), the re-read replaces the first reading.
 

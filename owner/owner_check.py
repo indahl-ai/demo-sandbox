@@ -20,7 +20,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-FAMILIES = {'heron_r2': os.path.join(HERE, 'recorded', 'heron_r2.jsonl.gz')}
+FAMILIES = {f: os.path.join(HERE, 'recorded', f + '.jsonl.gz') for f in ('heron_r2', 'nighthawk_r2')}   # nighthawk_r2: ibm_phoenix, ibm_chicago
 PUBLISHED = 'https://quantumidleaudit.com/qia/cal/%s.json'
 SRO, ST1 = 1000, 500                                     # shots: readout circuits, each T1 delay (qia_cal/cal.py)
 BILLED_S = 4                                             # IBM billed 4 s for every one of the 2,171 calibration jobs in our record as of 27 Nov 2026 (120 and 156 qubits)
@@ -198,6 +198,7 @@ def cell(k, n):
 
 def qubit_map(per_q, n_runs, n_qubits):
     rows = heron_r2_rows(n_qubits)
+    if rows is not None: print('    (laid out as on the chip)')
     if rows is None:                                      # another layout: by qubit number, sixteen to a line
         qs = sorted(per_q); rows = [[(c, q) for c, q in enumerate(qs[i:i + 16])] for i in range(0, len(qs), 16)]
         print('    (by qubit number, sixteen to a line, not the chip\'s layout)')
@@ -234,7 +235,7 @@ def report(by_chip, title, source_note, one_run=False):
             _, ch, q, t, k, m, lo, hi, ibm, f = x
             print('    %-14s %5d  %-17s %-7s %.4f [%.4f, %.4f]   %-12.6g %s' % (ch, q, t[:16] + 'Z', 'P(1|0)' if k == 'p10' else 'P(0|1)', m, lo, hi, ibm, PUBLISHED % f if not one_run else f))
         if not s['worst']: print('    none')
-        print('\n  qubit map: % of runs in which each qubit\'s readout read off IBM\'s record ("." never, "<1" under 1%), laid out as on the chip' if not one_run else
+        print('\n  qubit map: % of runs in which each qubit\'s readout read off IBM\'s record ("." never, "<1" under 1%)' if not one_run else
               '\n  qubit map: qubits whose readout read off IBM\'s record in this run ("100"), "." where it did not')
         qubit_map(s['per_qubit'], s['runs'], nq)
         print()

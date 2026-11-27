@@ -14,7 +14,7 @@
   python3 sandbox.py fetch  [--chip ...]       collect the finished jobs
   python3 sandbox.py analyze [--chip ...]      the same comparison, on YOUR run
 
-  python3 sandbox.py owner history --family heron_r2       our published calibration readings of the public Heron r2 chips. No key.
+  python3 sandbox.py owner history --family heron_r2       our published calibration readings of the public Heron r2 chips (or nighthawk_r2). No key.
   python3 sandbox.py owner check|fire|analyze --backend NAME  the same calibration check on a machine your account can use (owner/owner_check.py)
 
 Your key is read from the IBM_QUANTUM_TOKEN environment variable, used only to talk to IBM, never printed, never written to disk, and never sent anywhere
@@ -199,7 +199,7 @@ def owner(argv):
     check, fire and analyze run the same calibration check on THEIR machine, on their own key (owner/owner_check.py)."""
     ap = argparse.ArgumentParser(prog='sandbox.py owner', description='An independent record of an IBM machine\'s readout and T1.')
     ap.add_argument('cmd', choices=['history', 'check', 'fire', 'analyze'])
-    ap.add_argument('--family', default='heron_r2', help='history only: the chip family (heron_r2: ibm_fez, ibm_kingston, ibm_marrakesh)')
+    ap.add_argument('--family', default='heron_r2', help='history only: heron_r2 (ibm_fez, ibm_kingston, ibm_marrakesh) or nighthawk_r2 (ibm_phoenix, ibm_chicago)')
     ap.add_argument('--backend', help='check, fire, analyze: any IBM processor your account can use, e.g. ibm_cleveland')
     ap.add_argument('--yes', action='store_true')
     ap.add_argument('--time-unknown-ok', action='store_true', help='fire only: proceed when IBM does not report remaining time for the instance')

@@ -174,3 +174,11 @@ def test_point_figure_fallback_is_counted():
     assert O.off_grid(0.0012345, 4096) and not O.off_grid(10 / 4096, 4096)
     assert O.point_figure_line(qs, 4096) == "1 of IBM's readout figures were compared as point figures (not a count out of 4096 shots), so they carry no interval of IBM's own."
     assert O.point_figure_line([dict(ibm_p10=3 / 4096, ibm_p01=5 / 4096)], 4096) is None
+
+
+def test_nighthawk_history_runs_offline():
+    env = dict(os.environ); env.pop('IBM_QUANTUM_TOKEN', None)
+    r = subprocess.run([sys.executable, 'sandbox.py', 'owner', 'history', '--family', 'nighthawk_r2'], cwd=HERE, capture_output=True, text=True, timeout=300, env=env)
+    assert r.returncode == 0, r.stderr
+    assert 'ibm_phoenix:' in r.stdout and 'ibm_chicago:' in r.stdout and 'RESULT:' in r.stdout
+    assert 'not the chip\'s layout' in r.stdout and 'laid out as on the chip' not in r.stdout
