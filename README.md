@@ -61,3 +61,59 @@ Each demonstration shows one circuit on three IBM chips in two recorded runs. A 
 
 ## Checks
 `python tests/test_cli.py` drives every command of every demonstration with the IBM calls replaced, and fails if an option is lost on the way. It submits nothing.
+
+## Check your own circuit
+
+Measure the gates your own circuit uses, on the chip as it is today, on your own IBM account, and set them beside IBM's published figures.
+
+### What leaves your machine, and what doesn't
+
+- **Stays on your machine:** the circuit. The `.qasm` file is read and laid out (transpiled) locally. It is never submitted.
+- **Goes to IBM, on your key:** only check circuits. That's short two-qubit randomized-benchmarking sequences on the pairs your layout uses (lengths 1, 8, 24 and 48 Cliffords, eight sequences each, 300 shots), plus a readout check on your circuit's qubits (all 0 and all 1, 2,000 shots each). IBM sees which qubits and pairs were checked, as it does for any job.
+- **Your key:** read from `IBM_QUANTUM_TOKEN` and used only to reach your own IBM account.
+- **Results:** saved locally in `my_runs/` and on your IBM account. Nothing goes to Heuremen.
+
+### The four commands
+
+```bash
+export IBM_QUANTUM_TOKEN=...        # your own key, kept on this machine
+
+python sandbox.py mycircuit plan    my_circuit.qasm --backend ibm_kingston         # lay it out, list its pairs and IBM's figures, estimate IBM time. Submits nothing.
+python sandbox.py mycircuit fire    my_circuit.qasm --backend ibm_kingston --yes   # submits the check: one benchmarking job and one readout job
+python sandbox.py mycircuit fetch   my_circuit.qasm --backend ibm_kingston         # collects them. If not finished, run again in about 30 seconds.
+python sandbox.py mycircuit analyze my_circuit.qasm --backend ibm_kingston         # IBM's figure beside today's measurement, pair by pair and qubit by qubit
+```
+
+`fire` won't run without `--yes`, and it refuses if your account doesn't have the estimated IBM time plus 30 seconds to spare. `plan` prints the estimate first.
+
+### How long it takes
+
+About 55 seconds of IBM time (estimate) for a circuit that uses 7 pairs on 8 qubits (224 benchmarking circuits plus the readout check), plus queue time. Only the 10 most-used pairs are checked by default. Set `MYCIRCUIT_MAX_PAIRS` to change that. Unchecked pairs are marked in `plan`.
+
+### Try it offline first
+
+```bash
+python sandbox.py mycircuit plan my_circuit.qasm --backend ibm_kingston --fake kingston
+```
+
+`--fake kingston`, `--fake fez` or `--fake marrakesh` lays the circuit out on a stand-in chip with no key and nothing sent. The stand-in's figures are a stored snapshot, not today's. `--fake` works with `plan` only.
+
+### Export your circuit from Qiskit
+
+```python
+from qiskit import qasm2, qasm3
+
+open("my_circuit.qasm", "w").write(qasm2.dumps(qc))    # OpenQASM 2
+# or
+open("my_circuit.qasm", "w").write(qasm3.dumps(qc))    # OpenQASM 3
+```
+
+Both versions load. Reading an OpenQASM 3 file needs `pip install qiskit-qasm3-import`. The circuit needs at least one two-qubit gate after layout, since the check measures two-qubit gates.
+
+### Reading the result
+
+The first line is the answer: how many of the pairs your circuit uses read WORSE than IBM's published error, and how many qubits read worse than stated. A pair is flagged only when its whole interval sits above 1.25x of IBM's figure. WORSE is the only flag: on hardware this check has read most pairs below IBM's figure, which is not yet explained, so a low ratio is shown but never flagged. The second line gives the signal your two-qubit gates keep, by IBM's figures and by today's measurement.
+
+Benchmarking gives the average error per gate on each pair. It does not predict exactly how far your circuit's answer moves. The signal-kept line is a depolarizing-model estimate: it multiplies (1 - 4e/3) over your two-qubit gates and ignores single-qubit error, readout, idling, coherent error and crosstalk.
+
+The interval is labelled 99%. In a simulator test with known answers (`tests/null_test.py`, a chip simulated at exactly IBM's figures) the check read 1.03x on average, never flagged WORSE in 100 tries, and its interval covered the truth 92 times in 100. It covers sampling within one check, not change between checks: a repeat minutes later has differed by more. Single-qubit error inside the benchmark sequences is taken from IBM's stated single-qubit figures, not re-measured.
