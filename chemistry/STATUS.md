@@ -54,3 +54,5 @@ Run 1 = the first column pair of the published chips table (job ids in recorded_
 | all bits right vs stated (page text) | marrakesh | 2 | BELOW | BELOW (ours 0.788 vs 0.729) | PASS |
 
 ALL PASS
+
+- 27 Nov 2026 (Sage): the bits-right comparison against the stated-figure correction (BELOW or CONSISTENT) is no longer page text. Our measured gate figure comes from a benchmark fit that reads high, and a larger correction can score better on bits right without being more accurate. The energy comparison (1 to 5 mHa lower, inside the 10 mHa margin, not a shown difference) and the comparison against the default run stand.

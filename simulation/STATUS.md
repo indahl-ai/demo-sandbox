@@ -32,3 +32,5 @@ Job P 18 s plus main job 24 s (25 s on marrakesh): 42 s per run on kingston and 
 - No library beyond the four in `requirements.txt` is used.
 - `check`, `fire`, `fetch` need IBM_QUANTUM_TOKEN. `fire` was not run and no job was submitted while building this.
 - The original planning-file gate in `fire` (a power ratio line in a plan file) is applied only when that file exists; it is not shipped here.
+
+- 27 Nov 2026 (Sage): the measured-vs-stated ratios above (2.13 / 1.55 / 3.24, "mean RB/stated") were WITHDRAWN from the demo page. That fit counts the single-qubit gates inside the benchmark against the two-qubit gate and reads high, and the calibration never used it. The isolated figure it does use divides by (1 - 2e_sx) per sx where a two-qubit benchmark costs (1 - 1.6e_sx), so it may read low. No ratio is printed until a known-answer test settles it. The gains against the default run are unchanged.
