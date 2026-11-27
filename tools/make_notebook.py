@@ -6,7 +6,7 @@ import subprocess, sys, os, nbformat as nbf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = 'https://github.com/indahl-ai/demo-sandbox'
-TAG = 'v1.1'          # the notebook clones this release tag (a fixed commit), never moving main; the tag must point at a commit holding this notebook
+TAG = 'v1.2'          # the notebook clones this release tag (a fixed commit), never moving main; the tag must point at a commit holding this notebook
 md = nbf.v4.new_markdown_cell
 code = nbf.v4.new_code_cell
 
@@ -77,6 +77,24 @@ for i in range(60 if LIVE and USE_MY_IBM_TIME else 0):
 else:
     print('Nothing to collect yet.' if not (LIVE and USE_MY_IBM_TIME) else 'Not finished after 30 minutes. Run this cell again later.')
     if res is not None and res.returncode: print('Last analyze error output:'); print(res.stderr[-3000:])"""),
+md("""## For machine owners
+An independent record of an IBM machine's readout and T1. First, our own published calibration readings of the three public Heron r2 chips (ibm_fez, ibm_kingston, ibm_marrakesh) since 30 Oct 2026, replayed here. No key, no network. Each reading names its published file at quantumidleaudit.com/qia/cal/."""),
+code("""sandbox('owner', 'history', '--family', 'heron_r2')"""),
+md("""### The same check on your own machine
+Uses the key entered under Live run above (`LIVE = True`). Put your machine's name in `MY_BACKEND` (for example `'ibm_cleveland'`) and run the cell: `check` shows the qubit count, the age of IBM's current record, the IBM time a run uses (about 4 s) and the time left on your account. It submits nothing. To submit the one job, also set `FIRE_ON_MY_MACHINE = True`: the cell then fires, waits, and prints the same table for your machine. The result file is saved in `my_runs/`."""),
+code("""MY_BACKEND = ''              # for example 'ibm_cleveland'
+FIRE_ON_MY_MACHINE = False   # True submits one job on your account
+if LIVE and MY_BACKEND:
+    sandbox('owner', 'check', '--backend', MY_BACKEND)
+    if FIRE_ON_MY_MACHINE:
+        sandbox('owner', 'fire', '--backend', MY_BACKEND, '--yes')
+        import time
+        for i in range(60):
+            res = subprocess.run([PY, 'sandbox.py', 'owner', 'analyze', '--backend', MY_BACKEND], capture_output=True, text=True)
+            if 'RESULT:' in res.stdout or res.returncode: print(res.stdout); print(res.stderr[-3000:]); break
+            print(time.strftime('%H:%M:%S'), res.stdout.strip().splitlines()[-1] if res.stdout.strip() else ''); time.sleep(30)
+else:
+    print('Not run. Set LIVE = True under Live run above, and MY_BACKEND here.')"""),
 md("""Delete the session when finished (Colab: **Runtime > Disconnect and delete runtime**). Everything in it, including your live run, is removed."""),
 ]
 
@@ -88,5 +106,9 @@ r = subprocess.run([sys.executable, 'sandbox.py', 'finance', 'replay', '--chip',
 if r.returncode != 0 or ' RESULT ' not in r.stdout: sys.exit('replay failed; notebook not written:\n' + r.stdout[-800:] + r.stderr[-800:])
 nb.cells[5].outputs = [nbf.v4.new_output('stream', name='stdout', text=r.stdout)]
 nb.cells[5].execution_count = 1
+h = subprocess.run([sys.executable, 'sandbox.py', 'owner', 'history', '--family', 'heron_r2'], cwd=ROOT, capture_output=True, text=True)
+if h.returncode != 0 or 'RESULT:' not in h.stdout: sys.exit('owner history failed; notebook not written:\n' + h.stdout[-800:] + h.stderr[-800:])
+nb.cells[13].outputs = [nbf.v4.new_output('stream', name='stdout', text=h.stdout)]
+nb.cells[13].execution_count = 2
 nbf.write(nb, os.path.join(ROOT, 'QIA_demonstrations.ipynb'))
 print('wrote QIA_demonstrations.ipynb with the saved finance replay (%d lines)' % len(r.stdout.splitlines()))

@@ -23,7 +23,7 @@ On RunPod the template does this for you. Setup takes about a minute after the p
 
 Elsewhere: `git clone https://github.com/indahl-ai/demo-sandbox && cd demo-sandbox && bash start.sh && source .venv/bin/activate`
 
-Releases are tagged. The notebook (`QIA_demonstrations.ipynb`, for Colab and hosted sandboxes) clones release tag `v1.1`, a fixed commit, never the moving `main`. To use the same code here: `git clone --branch v1.1 https://github.com/indahl-ai/demo-sandbox`.
+Releases are tagged. The notebook (`QIA_demonstrations.ipynb`, for Colab and hosted sandboxes) clones release tag `v1.2`, a fixed commit, never the moving `main`. To use the same code here: `git clone --branch v1.2 https://github.com/indahl-ai/demo-sandbox`.
 
 ## Step 2: replay a recorded result. No key, no network, no IBM time.
     python sandbox.py chemistry replay
@@ -61,6 +61,31 @@ Each demonstration shows one circuit on three IBM chips in two recorded runs. A 
 
 ## Checks
 `python tests/test_cli.py` drives every command of every demonstration with the IBM calls replaced, and fails if an option is lost on the way. It submits nothing.
+
+`python -m pytest tests/test_owner.py` checks the owner counting rules, re-reads one published ibm_marrakesh run (job `dc4t0smq4uuc73a9e63g`, in `tests/fixtures/`) from its raw counts and requires every published figure back to the digit, and builds the check circuits on a stand-in chip. It submits nothing.
+
+## For machine owners
+
+An independent record of a dedicated IBM machine's readout and T1, measured on the owner's own account and set beside the record IBM publishes.
+
+### The record so far, on the public Heron r2 chips. No key, no network.
+
+    python sandbox.py owner history --family heron_r2
+
+Replays the calibration readings Heuremen has published for ibm_fez, ibm_kingston and ibm_marrakesh since 30 Oct 2026, from a read-only extract in `owner/recorded/`. Each reading names its published file, `https://quantumidleaudit.com/qia/cal/<file>.json`. Per chip it prints the runs and qubit readings, the readout readings that read off IBM's record (worse than stated), the distinct qubits that did so at least once, the readings at 10x IBM's figure or more, the age of IBM's readout record when each run started, the ten worst single readings, and a qubit map. The headline counts are readout only. T1 is printed apart, both ways.
+
+A reading counts as off when IBM's figure and the measured value do not overlap. Both get an exact 99.9% interval, since IBM's readout figures are themselves counts out of 1,024 or 4,096 shots. Where a run was re-read under a later rule (published as `<job>n3`), the re-read replaces the first reading.
+
+### The same check on the owner's machine
+
+    read -s -p "IBM Quantum API key: " IBM_QUANTUM_TOKEN; export IBM_QUANTUM_TOKEN; echo
+    python sandbox.py owner check   --backend ibm_cleveland          # qubit count, age of IBM's current record, IBM time, time left. Submits nothing.
+    python sandbox.py owner fire    --backend ibm_cleveland --yes    # submits one job on the account
+    python sandbox.py owner analyze --backend ibm_cleveland          # repeat every 30 s or so until it prints the table
+
+Any machine the key can see works. The job is the one behind every published reading: every usable qubit at once, physical layout, measured at rest and after X (1,000 shots each), and after X and a delay of 15, 40, 80, 160 or 320 us (500 shots each). IBM billed 4 s for each of the 2,166 such jobs on record. `fire` won't run without `--yes`, and it refuses with less than 34 s of IBM time left. IBM's record is saved when the job is sent, and the record in force when the job ran is pulled at analysis. `analyze` prints the same table as `history` and saves the result in `my_runs/`, in the same shape as the published files. The key is read from `IBM_QUANTUM_TOKEN`, never printed and never written to a file. Nothing goes to Heuremen.
+
+One run reads one hour of one machine. A record of a machine needs repeat runs.
 
 ## Check your own circuit
 

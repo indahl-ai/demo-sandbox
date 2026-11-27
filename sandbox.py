@@ -14,6 +14,9 @@
   python3 sandbox.py fetch  [--chip ...]       collect the finished jobs
   python3 sandbox.py analyze [--chip ...]      the same comparison, on YOUR run
 
+  python3 sandbox.py owner history --family heron_r2       our published calibration readings of the public Heron r2 chips. No key.
+  python3 sandbox.py owner check|fire|analyze --backend NAME  the same calibration check on a machine your account can use (owner/owner_check.py)
+
 Your key is read from the IBM_QUANTUM_TOKEN environment variable, used only to talk to IBM, never printed, never written to disk, and never sent anywhere
 else. Your runs are saved in ./my_runs/ on this machine. The recorded runs in ./recorded/ are read-only references and are never changed."""
 import os, sys, shutil, argparse
@@ -191,7 +194,21 @@ def my_circuit(argv):
     return C.run(a.cmd, a.file, a.backend, yes=a.yes, fake=a.fake, opt=a.opt)
 
 
+def owner(argv):
+    """27 Nov 2026: for people who own or rent an IBM machine. history replays our published calibration readings of the public chips of a family;
+    check, fire and analyze run the same calibration check on THEIR machine, on their own key (owner/owner_check.py)."""
+    ap = argparse.ArgumentParser(prog='sandbox.py owner', description='An independent record of an IBM machine\'s readout and T1.')
+    ap.add_argument('cmd', choices=['history', 'check', 'fire', 'analyze'])
+    ap.add_argument('--family', default='heron_r2', help='history only: the chip family (heron_r2: ibm_fez, ibm_kingston, ibm_marrakesh)')
+    ap.add_argument('--backend', help='check, fire, analyze: any IBM processor your account can use, e.g. ibm_cleveland')
+    ap.add_argument('--yes', action='store_true')
+    a = ap.parse_args(argv)
+    sys.path.insert(0, os.path.join(HERE, 'owner')); import owner_check as O
+    return O.run(a.cmd, family=a.family, backend=a.backend, yes=a.yes)
+
+
 def _main():
+    if len(sys.argv) > 1 and sys.argv[1] == 'owner': return owner(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] == 'mycircuit': return my_circuit(sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] in OTHER: return other_demo(sys.argv[1], sys.argv[2:])
     if len(sys.argv) > 1 and sys.argv[1] == 'finance': sys.argv.pop(1)
