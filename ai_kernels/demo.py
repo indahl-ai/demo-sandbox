@@ -8,7 +8,7 @@ Five readings of the SAME shots of the client's circuits (one set of circuits, i
   (extras, attribution only)  R = O's readout only, no fade     G = O's fade only, raw readout
 FADE MODEL (written before data; no parameter fitted on the main shots):
   P_meas(all zeros) = R_ro x [ F K + (1 - F) / 2^n ],   F = product over every CZ of the transpiled circuit of (1 - 4 e_pair / 3)
-  (global-depolarizing fade; e_pair is the RB average infidelity, same convention as IBM's stated figure).
+  (global-depolarizing fade; e_pair is our parallel-RB fit, which bills 1q gates to the CZ and includes crosstalk; it is not IBM's isolated convention).   # corrected 27 Nov 2026 (Sage)
   Estimate: invert readout on the full 2^n outcome distribution with tensor per-qubit confusion matrices, then K_hat = (P0 - (1-F)/2^n) / F.
   Same model for S and O; only the tables differ.
 Task: ZZFeatureMap-style (reps 2, linear entanglement, H, P(2x), CX-P(2(pi-xi)(pi-xj))-CX), 8 features on 8 qubits, 16 train + 10 test points,
