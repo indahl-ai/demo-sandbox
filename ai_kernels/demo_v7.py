@@ -167,16 +167,16 @@ def mode_analyze():
     if st.get("billed_qpu_seconds") is not None: print("Run time billed by IBM for this job: %s s" % st["billed_qpu_seconds"])
     rows = []; Z = 2.576
     print("\nMEASURED FADE BY SIZE (self-score of a point against itself; the ideal circuit gives 1 at any size; 99% interval)")
-    print("  N   CZ   measured self-score A (99% interval)   gate-only reading S (IBM's record)   A minus S (99% interval): word")
+    print("  N   CZ   measured self-score A (99% interval)   record-implied S (IBM's record)   A minus S (99% interval): word")
     for ss in st["sets"]:
         v = np.array(st["selfscore"][str(ss["n"])]); pc = v.mean(1); A = pc.mean(); h = m.tq(COPIES) * pc.std(ddof=1) / math.sqrt(COPIES)
         S, ro, F = st["stated"][str(ss["n"])]; lo, hi = A - S - h, A - S + h; w = m.word(lo, hi, 0.01)
         f1 = onequbit_fade(be, ss, rec); F2 = F * f1; S1 = ro * (F2 + (1 - F2) / 2 ** ss["n"])
         rows.append((ss["n"], A, h, S, S1))
         print("  %2d  %3d   %.3f (%.4f to %.4f)                  %.4f                                %+.4f (%+.4f to %+.4f): %s" % (ss["n"], ss["ncz"], A, A - h, A + h, S, A - S, lo, hi, w))
-    print("\nTHE SHOT BILL: shots each kernel entry needs, as a multiple of what a plan built on IBM's gate errors alone would budget")
+    print("\nTHE SHOT BILL: shots each kernel entry needs, as a multiple of what a plan built on IBM's published gate and readout errors would budget")
     print("  (IBM's two-qubit and single-qubit gate errors and readout errors; binomial bill at a typical score of 0.5, defined after the data)")
-    print("  Qubits   gate-only plan S   measured A   shot bill")
+    print("  Qubits   record-implied S   measured A   shot bill")
     for n, A, h, S, S1 in rows:
         K = 0.5; bill = (S1 / A) * (1 - A * K) / (1 - S1 * K)
         print("  %5d    %.3f              %.3f        %.2fx" % (n, S1, A, bill))
