@@ -293,7 +293,7 @@ def analyze(st):
     print('Benchmarking gives the average error per gate on each pair, on the pairs measured, at the hour measured. It does not predict exactly how far your circuit\'s answer moves.')
     print('Your circuit stays on this machine. The check\'s results are on your IBM account and here, and nothing goes to Heuremen.')
     print('On hardware this check has read most pairs below IBM\'s figure. That is not yet explained, so a low ratio is not flagged.')
-    print('The 99% interval covers sampling within this check, not change between checks. A repeat minutes later has differed by more.')
+    print('The interval is labelled 99%. In a simulator test with known answers it covered the truth 92 times in 100. It covers sampling within this check, not change between checks; a repeat minutes later has differed by more.')
     print('The jobs are on your IBM account, so anyone you show this to can look them up.')
 
 
