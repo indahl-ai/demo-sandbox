@@ -23,7 +23,7 @@ On RunPod the template does this for you. Setup takes about a minute after the p
 
 Elsewhere: `git clone https://github.com/indahl-ai/demo-sandbox && cd demo-sandbox && bash start.sh && source .venv/bin/activate`
 
-Releases are tagged. The public RunPod template also clones release tag `v1.4`. On RunPod, open the pod's web terminal (Connect, then Start Web Terminal) and run `cd /workspace/demo && .venv/bin/python sandbox.py owner history`, or the owner check with `--backend` set to your machine. The notebook (`QIA_demonstrations.ipynb`, for Colab and hosted sandboxes) clones release tag `v1.4`, a fixed commit, never the moving `main`. To use the same code here: `git clone --branch v1.4 https://github.com/indahl-ai/demo-sandbox`.
+Releases are tagged. The public RunPod template also clones release tag `v1.5`. On RunPod, open the pod's web terminal (Connect, then Start Web Terminal) and run `cd /workspace/demo && .venv/bin/python sandbox.py owner history`, or the owner check with `--backend` set to your machine. The notebook (`QIA_demonstrations.ipynb`, for Colab and hosted sandboxes) clones release tag `v1.5`, a fixed commit, never the moving `main`. To use the same code here: `git clone --branch v1.5 https://github.com/indahl-ai/demo-sandbox`.
 
 ## Step 2: replay a recorded result. No key, no network, no IBM time.
     python sandbox.py chemistry replay

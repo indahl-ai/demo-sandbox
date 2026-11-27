@@ -182,3 +182,10 @@ def test_nighthawk_history_runs_offline():
     assert r.returncode == 0, r.stderr
     assert 'ibm_phoenix:' in r.stdout and 'ibm_chicago:' in r.stdout and 'RESULT:' in r.stdout
     assert 'not the chip\'s layout' in r.stdout and 'laid out as on the chip' not in r.stdout
+
+
+def test_history_prints_strong_counts():
+    env = dict(os.environ); env.pop('IBM_QUANTUM_TOKEN', None)
+    r = subprocess.run([sys.executable, 'sandbox.py', 'owner', 'history', '--family', 'heron_r2'], cwd=HERE, capture_output=True, text=True, timeout=300, env=env)
+    assert 'In 888 of 1,306 runs' in r.stdout and '437 runs counting only IBM figures of 1% or more' in r.stdout
+    assert '70 qubits read wrong more than half the time' in r.stdout

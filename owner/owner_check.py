@@ -251,6 +251,28 @@ def load_family(family):
     return by
 
 
+
+def strong_counts(by):
+    """27 Nov 2026 (v1.5): the two cross-chip counts quoted in owner pitches, under the published rule, runs with a failed known-good seat skipped.
+    tenx: runs where at least one qubit's readout was called off with its interval's LOW end at 10x IBM's nonzero figure or more
+          (tenx_1pct: the same, counting only IBM figures of 1% or more).
+    near_total: distinct (chip, qubit) with at least one off readout reading whose interval's low end is above 0.5 while IBM's figure was under 5%."""
+    n = tenx = tenx1 = 0; near = set()
+    for chip, runs in by.items():
+        for r in runs:
+            if r.get('known_good') == 'failed': continue
+            n += 1; t = t1 = False
+            for i, q in enumerate(r['q']):
+                for k in ('p10', 'p01'):
+                    if r[k + '_out'][i] != 'B': continue
+                    ib = r['ibm_' + k][i]
+                    if ib and r[k + '_lo'][i] >= 10 * ib:
+                        t = True
+                        if ib >= 0.01: t1 = True
+                    if ib is not None and ib < 0.05 and r[k + '_lo'][i] > 0.5: near.add((chip, q))
+            tenx += t; tenx1 += t1
+    return dict(runs=n, tenx=tenx, tenx_1pct=tenx1, near_total=len(near))
+
 def history(family):
     by = load_family(family)
     t = report(by, 'RECORDED HISTORY, %s: our published calibration readings of the public %s chips. Nothing is sent anywhere and no key is used.'
@@ -261,6 +283,9 @@ def history(family):
     off = sum(s['off'] for s in t.values()); n = sum(s['readings'] for s in t.values()); runs = sum(s['runs'] for s in t.values())
     print('RESULT: on %s runs across %d public chips of this family, %s of %s qubit readings (%.1f%%) read off IBM\'s readout record, worse than stated.'
           % (c(runs), len(t), c(off), c(n), pct(off, n)))
+    sc = strong_counts(by)
+    print('In %s of %s runs (failed seats skipped), at least one qubit\'s readout was at least 10 times worse than IBM\'s figure (interval low end; %s runs counting only IBM figures of 1%% or more).' % (c(sc['tenx']), c(sc['runs']), c(sc['tenx_1pct'])))
+    print('%d qubits read wrong more than half the time (interval low end above 0.5, one prepared state) on at least one reading while IBM\'s figure was under 5%%.' % sc['near_total'])
     print('Every one of those readings sat under a record IBM was publishing at the time. Without an independent record of a machine, none of this shows.')
     print('This shows the public machines on the days we ran them. It says nothing about any other machine until that machine is measured.')
     print('To measure your own: python sandbox.py owner check --backend <your machine>')
