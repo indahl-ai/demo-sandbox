@@ -171,3 +171,6 @@ def test_point_figure_fallback_is_counted():
     qs = [dict(ibm_p10=0.0012345, ibm_p01=10 / 4096), dict(ibm_p10=3 / 4096, ibm_p01=None)]
     assert O.point_figure_count(qs, 4096) == 1
     assert O.side_counts(0.0012345, 0.01, 0.02) == 'BELOW'   # point figure below our interval: called, with no interval for IBM
+    assert O.off_grid(0.0012345, 4096) and not O.off_grid(10 / 4096, 4096)
+    assert O.point_figure_line(qs, 4096) == "1 of IBM's readout figures were compared as point figures (not a count out of 4096 shots), so they carry no interval of IBM's own."
+    assert O.point_figure_line([dict(ibm_p10=3 / 4096, ibm_p01=5 / 4096)], 4096) is None

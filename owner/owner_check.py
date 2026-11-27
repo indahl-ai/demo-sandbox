@@ -47,11 +47,16 @@ def side(stated, lo, hi):
     return 'ABOVE' if stated > hi else ('BELOW' if stated < lo else 'CONSISTENT')
 
 
+def off_grid(stated, n_ibm):
+    """True when IBM's figure is not k/n_ibm. side_counts then compares against the point figure."""
+    return abs(stated * n_ibm - round(stated * n_ibm)) > 1e-6
+
+
 def side_counts(stated, lo, hi, n_ibm=4096):
     """IBM's readout figure is k/n_ibm: it gets its own exact 99.9% interval, and the call is made only when the two do not overlap."""
     if stated is None or not np.isfinite(stated): return 'CANNOT_TELL'
     k = stated * n_ibm
-    if abs(k - round(k)) > 1e-6: return side(stated, lo, hi)
+    if off_grid(stated, n_ibm): return side(stated, lo, hi)
     _, ilo, ihi = clopper(np.array([round(k)]), n_ibm); ilo, ihi = float(ilo[0]), float(ihi[0])
     return 'ABOVE' if ilo > hi else ('BELOW' if ihi < lo else 'CONSISTENT')
 
@@ -429,7 +434,13 @@ def analyze(backend):
 def point_figure_count(qubits, n_ibm):
     """Readout figures that are not k/n_ibm: those are compared against IBM's point figure, without an interval of IBM's own."""
     return sum(1 for q in qubits for k in ('ibm_p10', 'ibm_p01')
-               if q.get(k) is not None and np.isfinite(q[k]) and abs(q[k] * n_ibm - round(q[k] * n_ibm)) > 1e-6)
+               if q.get(k) is not None and np.isfinite(q[k]) and off_grid(q[k], n_ibm))
+
+
+def point_figure_line(qubits, n_ibm):
+    npf = point_figure_count(qubits, n_ibm)
+    if not npf: return None
+    return '%d of IBM\'s readout figures were compared as point figures (not a count out of %d shots), so they carry no interval of IBM\'s own.' % (npf, n_ibm)
 
 
 def show_own(res, path=None):
@@ -440,8 +451,8 @@ def show_own(res, path=None):
                % (res['known_good'], res['median_readout_measured_over_stated'], res['median_t1_measured_over_stated'], res['ibm_readout_shots']), one_run=True)
     s = t[res['processor']]
     print('RESULT: %d of %d qubits on %s read off IBM\'s readout record in this run, worse than stated (%.1f%%).' % (s['off'], s['readings'], res['processor'], pct(s['off'], s['readings'])))
-    npf = point_figure_count(res['qubits'], res['ibm_readout_shots'])
-    if npf: print('%d readings were compared against IBM\'s point figure (the figure is not a count out of %d shots), so they carry no interval of IBM\'s own.' % (npf, res['ibm_readout_shots']))
+    pl = point_figure_line(res['qubits'], res['ibm_readout_shots'])
+    if pl: print(pl)
     print('One run is a few minutes of one machine. The record IBM publishes changes, and so does the machine: a record of your own needs repeat runs.')
     if path: print('Saved: %s  (the same shape as our published files. The job ID opens the raw counts on your IBM account)' % path)
     print('Nothing goes to Heuremen.')
