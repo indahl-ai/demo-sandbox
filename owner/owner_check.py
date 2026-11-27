@@ -23,7 +23,7 @@ ROOT = os.path.dirname(HERE)
 FAMILIES = {'heron_r2': os.path.join(HERE, 'recorded', 'heron_r2.jsonl.gz')}
 PUBLISHED = 'https://quantumidleaudit.com/qia/cal/%s.json'
 SRO, ST1 = 1000, 500                                     # shots: readout circuits, each T1 delay (qia_cal/cal.py)
-BILLED_S = 4                                             # IBM billed 4 s for every one of 2,166 recorded calibration jobs of this shape (120 and 156 qubits)
+BILLED_S = 4                                             # IBM billed 4 s for every one of the 2,171 calibration jobs in our record as of 27 Nov 2026 (120 and 156 qubits)
 SPARE_S = 30                                             # fire refuses with less than BILLED_S + SPARE_S left, as mycircuit does
 TAG = 'owner-calibration-check'
 
@@ -378,8 +378,9 @@ def check(backend):
     print('YOUR MACHINE %s: %d qubits, %d usable for the check (X and measure available).' % (backend, be.num_qubits, len(qs)))
     if a: print('IBM\'s current readout record: median age %s, oldest qubit %s.' % (hours(float(np.median(a))), hours(max(a))))
     print('The check: one job of 7 circuits (2 readout circuits at %d shots, 5 T1 delays at %d shots), every usable qubit at once.' % (SRO, ST1))
-    print('IBM time: about %d s (estimate). IBM billed %d s for each of the 2,166 calibration jobs of this shape in our record, plus queue time.' % (BILLED_S, BILLED_S))
+    print('IBM time: about %d s (estimate). IBM billed %d s for every one of the 2,171 calibration jobs in our record as of 27 Nov 2026. Queue time is not billed.' % (BILLED_S, BILLED_S))
     print('Your remaining IBM time: %s' % ('%.0f s' % left if left is not None else 'not reported by IBM for this instance'))
+    if left is None: print('fire refuses when remaining time is not reported. If your plan covers about %d s, add --time-unknown-ok to fire.' % BILLED_S)
     if left is not None and left < BILLED_S + SPARE_S: print('Too little time left: fire refuses below %d s.' % (BILLED_S + SPARE_S))
     print('\nNothing was submitted. To run it: python sandbox.py owner fire --backend %s --yes' % backend)
 
@@ -408,7 +409,9 @@ def analyze(backend):
     if not s.endswith('DONE'):
         if s.endswith('ERROR') or s.endswith('CANCELLED'): sys.exit('job %s ended %s on IBM\'s side; nothing to analyze' % (st['job_id'], s))
         print('job %s: %s. Not finished yet. Run analyze again in about 30 seconds.' % (st['job_id'], s)); return
-    m = j.metrics(); ts = m.get('timestamps') or {}; win = [str(ts.get('running', ''))[:19] + 'Z', str(ts.get('finished', ''))[:19] + 'Z']
+    m = j.metrics(); ts = m.get('timestamps') or {}
+    if not ts.get('running') or not ts.get('finished'): sys.exit('job %s: IBM returned no run timestamps yet. Run analyze again in a minute.' % st['job_id'])
+    win = [str(ts['running'])[:19] + 'Z', str(ts['finished'])[:19] + 'Z']
     try: run_props = svc.backend(backend).properties(datetime=dt.datetime.fromisoformat(win[0].replace('Z', '+00:00'))).to_dict()
     except Exception: run_props = None
     if not run_props:

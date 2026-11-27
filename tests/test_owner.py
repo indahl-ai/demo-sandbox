@@ -151,3 +151,11 @@ def test_fire_refuses_when_remaining_time_unknown(monkeypatch):
     monkeypatch.setattr(O, 'remaining', lambda svc: None)
     with pytest.raises(SystemExit) as e: O.fire('ibm_cleveland', yes=True)
     assert 'time-unknown-ok' in str(e.value)
+
+
+def test_utc_handles_eastern_dst_and_offsets():
+    sys.path.insert(0, os.path.join(HERE, 'tools')); import build_owner_history as B
+    assert B.utc('2026-10-31 12:00:00') == '2026-10-31T16:00Z'
+    assert B.utc('2026-11-02 12:00:00') == '2026-11-02T17:00Z'
+    assert B.utc('2026-11-27 01:12:52-05:00') == '2026-11-27T06:12Z'
+    assert B.utc('2026-11-27T06:12Z') == '2026-11-27T06:12Z'

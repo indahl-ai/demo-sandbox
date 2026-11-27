@@ -25,6 +25,7 @@ def utc(s):
     if not s: return None
     if s.endswith('Z'): return s
     t = dt.datetime.fromisoformat(s.replace(' ', 'T'))
+    if t.tzinfo: return t.astimezone(dt.timezone.utc).strftime('%Y-%m-%dT%H:%MZ')
     u = (t + dt.timedelta(hours=4)).replace(tzinfo=dt.timezone.utc)
     if u >= DST_END: u += dt.timedelta(hours=1)
     return u.strftime('%Y-%m-%dT%H:%MZ')
