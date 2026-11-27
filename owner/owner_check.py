@@ -389,6 +389,7 @@ def fire(backend, yes=False, time_unknown_ok=False):
     svc = service(); be = svc.backend(backend); qs = usable(be); left = remaining(svc)
     if left is None and not time_unknown_ok:   # fail closed (27 Nov 2026, Sage): dedicated and contract instances may not report remaining time
         sys.exit('refusing: IBM does not report remaining time for this instance. If your plan has time for about %d s, add --time-unknown-ok to fire.' % BILLED_S)
+    if left is None: print('WARNING: IBM reports no remaining time for this instance. Proceeding on --time-unknown-ok. The check uses about %d s.' % BILLED_S)
     if left is not None and left < BILLED_S + SPARE_S:
         sys.exit('refusing: %.0f s of IBM time left, the check needs about %d s plus %d s to spare' % (left, BILLED_S, SPARE_S))
     from qiskit_ibm_runtime import SamplerV2
