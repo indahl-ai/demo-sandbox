@@ -397,6 +397,8 @@ def fire(backend, yes=False, time_unknown_ok=False):
     p = pubs(be, qs); props = be.properties(refresh=True).to_dict()
     sm = SamplerV2(mode=be); sm.options.environment.job_tags = [TAG]
     j = sm.run(p); jid = j.job_id(); now = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    if os.path.exists(state_path(backend)):
+        print('Note: this replaces the saved local state of your previous check (job %s). That job stays on your IBM account.' % json.load(open(state_path(backend))).get('job_id'))
     json.dump(dict(backend=backend, job_id=jid, sent=now, qubits=qs, props_at_send=props), open(state_path(backend), 'w'), default=str)
     print('Submitted on your account: job %s, %d qubits.\nNext: python sandbox.py owner analyze --backend %s   (run again every 30 s or so until it prints the table)'
           % (jid, len(qs), backend))
@@ -424,6 +426,12 @@ def analyze(backend):
     show_own(res, out)
 
 
+def point_figure_count(qubits, n_ibm):
+    """Readout figures that are not k/n_ibm: those are compared against IBM's point figure, without an interval of IBM's own."""
+    return sum(1 for q in qubits for k in ('ibm_p10', 'ibm_p01')
+               if q.get(k) is not None and np.isfinite(q[k]) and abs(q[k] * n_ibm - round(q[k] * n_ibm)) > 1e-6)
+
+
 def show_own(res, path=None):
     r = as_run(res)
     t = report({res['processor']: [r]}, 'YOUR MACHINE %s, job %s on your own account: our calibration check against IBM\'s record in force at the job start.'
@@ -432,7 +440,9 @@ def show_own(res, path=None):
                % (res['known_good'], res['median_readout_measured_over_stated'], res['median_t1_measured_over_stated'], res['ibm_readout_shots']), one_run=True)
     s = t[res['processor']]
     print('RESULT: %d of %d qubits on %s read off IBM\'s readout record in this run, worse than stated (%.1f%%).' % (s['off'], s['readings'], res['processor'], pct(s['off'], s['readings'])))
-    print('One run is one hour of one machine. The record IBM publishes changes, and so does the machine: a record of your own needs repeat runs.')
+    npf = point_figure_count(res['qubits'], res['ibm_readout_shots'])
+    if npf: print('%d readings were compared against IBM\'s point figure (the figure is not a count out of %d shots), so they carry no interval of IBM\'s own.' % (npf, res['ibm_readout_shots']))
+    print('One run is a few minutes of one machine. The record IBM publishes changes, and so does the machine: a record of your own needs repeat runs.')
     if path: print('Saved: %s  (the same shape as our published files. The job ID opens the raw counts on your IBM account)' % path)
     print('Nothing goes to Heuremen.')
 

@@ -165,3 +165,9 @@ def test_owner_fire_parses_time_unknown_ok():
     env = dict(os.environ); env.pop('IBM_QUANTUM_TOKEN', None)
     r = subprocess.run([sys.executable, 'sandbox.py', 'owner', 'fire', '--backend', 'ibm_cleveland', '--time-unknown-ok'], cwd=HERE, capture_output=True, text=True, timeout=120, env=env)
     assert 'unrecognized arguments' not in r.stderr and 'add --yes' in r.stderr
+
+
+def test_point_figure_fallback_is_counted():
+    qs = [dict(ibm_p10=0.0012345, ibm_p01=10 / 4096), dict(ibm_p10=3 / 4096, ibm_p01=None)]
+    assert O.point_figure_count(qs, 4096) == 1
+    assert O.side_counts(0.0012345, 0.01, 0.02) == 'BELOW'   # point figure below our interval: called, with no interval for IBM
