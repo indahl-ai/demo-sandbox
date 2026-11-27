@@ -1,0 +1,12 @@
+NULL TEST on a FakeKingston noise model, 10 reps, RB_SEQ=8
+  0-1      stated 0.00115   measured/stated mean 1.10  (min 0.82 max 1.37)   99% interval covered stated 9/10
+  8-9      stated 0.00291   measured/stated mean 1.04  (min 0.95 max 1.12)   99% interval covered stated 9/10
+  17-27    stated 0.00155   measured/stated mean 0.98  (min 0.87 max 1.16)   99% interval covered stated 8/10
+  25-37    stated 0.00195   measured/stated mean 1.12  (min 1.00 max 1.29)   99% interval covered stated 8/10
+  33-39    stated 0.00277   measured/stated mean 0.99  (min 0.92 max 1.07)   99% interval covered stated 10/10
+  43-56    stated 0.00617   measured/stated mean 0.99  (min 0.95 max 1.09)   99% interval covered stated 10/10
+  51-58    stated 0.00188   measured/stated mean 0.98  (min 0.88 max 1.08)   99% interval covered stated 10/10
+  61-62    stated 0.00183   measured/stated mean 0.99  (min 0.86 max 1.11)   99% interval covered stated 10/10
+  69-70    stated 0.00236   measured/stated mean 0.99  (min 0.89 max 1.10)   99% interval covered stated 10/10
+  78-89    stated 0.00179   measured/stated mean 1.11  (min 1.01 max 1.24)   99% interval covered stated 8/10
+ALL PAIRS: mean ratio 1.03, median 1.03, coverage 92/100, FALSE FLAGS 0/100 (a flag on a chip that matches its record)

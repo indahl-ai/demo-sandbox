@@ -1,0 +1,31 @@
+YOUR CIRCUIT'S GATES on ibm_kingston, checked 2026-11-27T14:20:51Z on your own account (jobs dc4p3ganj2vs73dkg2hg, dc4p3glhdvas73bq40d0).
+Against IBM's published figures dated 2026-11-27T08:27:17-05:00.
+
+  pair        uses   IBM stated   measured today (99% interval)       ratio (99% interval)
+  0-1            1      0.00446   0.00113 [0.00086, 0.00135]     0.25x [0.19, 0.30]  better than stated
+  1-2            1      0.00081   0.00053 [0.00041, 0.00075]     0.65x [0.51, 0.93]
+  2-3            1      0.00121   0.00056 [0.00030, 0.00075]     0.46x [0.25, 0.62]  better than stated
+  3-4            1      0.00176   0.00116 [0.00082, 0.00139]     0.66x [0.47, 0.79]  better than stated
+  4-5            1      0.00205   0.00128 [0.00090, 0.00165]     0.62x [0.44, 0.81]
+  5-6            1      0.00300   0.00319 [0.00270, 0.00360]     1.06x [0.90, 1.20]
+  6-7            1      0.00856   0.00847 [0.00776, 0.00900]     0.99x [0.91, 1.05]
+
+  qubit   read 1 when 0: IBM stated / today (99% interval)      read 0 when 1: IBM stated / today (99% interval)
+      0     0.0227 / 0.0085 [0.0041, 0.0153]            0.0171 / 0.0205 [0.0132, 0.0301]
+      1     0.0049 / 0.0005 [0.0000, 0.0037]            0.0088 / 0.0215 [0.0140, 0.0313]
+      2     0.0059 / 0.0085 [0.0041, 0.0153]            0.0144 / 0.0175 [0.0109, 0.0265]
+      3     0.0007 / 0.0045 [0.0016, 0.0100]            0.0137 / 0.0155 [0.0093, 0.0241]
+      4     0.0071 / 0.0100 [0.0052, 0.0173]            0.0117 / 0.0110 [0.0059, 0.0185]
+      5     0.0010 / 0.0160 [0.0097, 0.0247]            0.0088 / 0.0115 [0.0063, 0.0192]
+      6     0.0022 / 0.0060 [0.0025, 0.0120]            0.0071 / 0.0080 [0.0038, 0.0147]
+      7     0.0056 / 0.0055 [0.0022, 0.0114]            0.0144 / 0.0120 [0.0066, 0.0198]
+
+  Depolarizing-model estimate of the signal your two-qubit gates keep (product of 1 - 4e/3 over the gates; ignores single-qubit error,
+  readout, coherent error and crosstalk):  from IBM's stated figures 0.971   from today's measurement 0.978 [0.977, 0.980] (99%)
+  7 of 7 pairs your circuit uses were measured. Any others keep IBM's stated figure in the second number.
+
+RESULT: 3 of 7 checked pairs (whole 99% interval past 1.25x or under 0.80x of IBM's figure) and 0 of 8 qubits read differently from IBM's published figures today.
+Up to 10 pairs are checked, each at 99%, so across many pairs one flag can be chance. Pairs with an interval that straddles the margin are not flagged.
+Benchmarking gives the average error per gate on each pair, on the pairs measured, at the hour measured. It does not predict exactly how far your circuit's answer moves.
+Only the benchmarking and readout circuits were sent, to IBM, on your account. Your circuit and these results stay on this machine.
+The jobs are on your IBM account, so anyone you show this to can look them up.

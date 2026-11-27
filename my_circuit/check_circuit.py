@@ -17,10 +17,12 @@ import os, sys, json, time, random, hashlib
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-RB_LENGTHS, RB_SEQ, RB_SHOTS, RO_SHOTS = [1, 4, 8, 16], 3, 300, 2000
+RB_LENGTHS, RB_SHOTS, RO_SHOTS = [1, 8, 24, 48], 300, 2000   # 27 Nov: up to 16 Cliffords could not resolve ~0.1% pairs (the fit hit r = 1); longer costs little IBM time
+RB_SEQ = int(os.environ.get('MYCIRCUIT_RB_SEQ', '8'))   # 27 Nov (Sage): 3 per length gave only 10 distinct resamples; 8 per length
 MAX_PAIRS = int(os.environ.get('MYCIRCUIT_MAX_PAIRS', '10'))   # most-used pairs first; keeps the job near half a minute
-FLAG_HI, FLAG_LO = 1.25, 0.80
+FLAG_HI, FLAG_LO = 1.25, 0.80   # flag margins, fixed 27 Nov 2026 13:5x UTC BEFORE the first live run (ibm_kingston, 14:03Z); never tuned on a result
 TWOQ = ('cz', 'ecr', 'cx')
+RESOLVE = 0.00005   # a 99% lower bound at or under this is treated as zero (the fit reached r = 1)
 
 
 def load_circuit(path):
@@ -95,6 +97,20 @@ def keep(pairs, errs):
     return v
 
 
+def oneq_factor(be, tc):
+    """27 Nov (Sage's null test): the single-qubit gates inside each RB sequence also decay the signal. Without this the per-pair figure read
+    about 1.3x high on a chip simulated at exactly its stated figures. Each physical 1q gate with stated error e1 multiplies the two-qubit
+    polarization by (1 - 1.6 e1) (12 of the 15 two-qubit Paulis touch that qubit, and a 1q depolarizing parameter is 1 - 2 e1). Uses IBM's stated
+    1q figures, so that part is not re-measured. rz is virtual and costs nothing."""
+    t = be.target; f = 1.0
+    for i in tc.data:
+        name = i.operation.name
+        if len(i.qubits) != 1 or name in ('rz', 'measure', 'barrier', 'delay') or name not in t.operation_names: continue
+        q = tc.find_bit(i.qubits[0]).index; pr = t[name].get((q,))
+        if pr is not None and pr.error: f *= (1 - 1.6 * pr.error)
+    return f
+
+
 def rb_circuits(be, chosen, seed=11):
     from qiskit import QuantumCircuit, transpile
     from qiskit.quantum_info import random_clifford, Clifford
@@ -108,7 +124,7 @@ def rb_circuits(be, chosen, seed=11):
                 qc.compose(comp.adjoint().to_circuit(), inplace=True); qc.measure_all()
                 tc = transpile(qc, backend=be, initial_layout=list(e), optimization_level=1, seed_transpiler=5)
                 n2 = sum(v for k, v in tc.count_ops().items() if k in TWOQ)
-                circs.append(tc); meta.append(['%d-%d' % e, m, n2])
+                circs.append(tc); meta.append(['%d-%d' % e, m, n2, oneq_factor(be, tc)])
     return circs, meta
 
 
@@ -124,28 +140,32 @@ def ro_circuits(be, qubits):
 
 
 def rb_ci(counts, meta, n_boot=400, seed=3):
-    """99% interval per pair: resample that pair's benchmarking circuits with replacement and refit (27 Nov: a flag needs an interval, Sage's rule)."""
-    rng = np.random.default_rng(seed); out = {}
+    """99% interval per pair. Stratified: resample sequences WITHIN each length (27 Nov, Sage), refit; returns (lo, hi) and the draws."""
+    rng = np.random.default_rng(seed); out, draws = {}, {}
     for key in sorted(set(m[0] for m in meta)):
-        idx = [i for i, m in enumerate(meta) if m[0] == key]; vals = []
+        by_len = {}
+        for i, m in enumerate(meta):
+            if m[0] == key: by_len.setdefault(m[1], []).append(i)
+        vals = []
         for _ in range(n_boot):
-            pick = rng.choice(idx, size=len(idx), replace=True)
-            if len(set(meta[i][2] for i in pick)) < 2: continue
+            pick = [j for L in by_len.values() for j in rng.choice(L, size=len(L), replace=True)]
             vals.append(rb_fit([counts[i] for i in pick], [meta[i] for i in pick])[key])
-        out[key] = (float(np.percentile(vals, 0.5)), float(np.percentile(vals, 99.5))) if vals else (None, None)
-    return out
+        draws[key] = vals
+        out[key] = (float(np.percentile(vals, 0.5)), float(np.percentile(vals, 99.5)))
+    return out, draws
 
 
 def rb_fit(counts, meta):
-    """per pair: P00 = 0.25 + A r^n over the transpiled two-qubit gate count n; error per gate = 0.75 (1 - r)."""
+    """per pair: P00 = 0.25 + A F1 r^n, n = transpiled two-qubit gate count, F1 = known 1q decay (oneq_factor); error per 2q gate = 0.75 (1 - r)."""
     out = {}
     for key in sorted(set(m[0] for m in meta)):
         xs = np.array([m[2] for c, m in zip(counts, meta) if m[0] == key], float)
+        f1 = np.array([(m[3] if len(m) > 3 else 1.0) for c, m in zip(counts, meta) if m[0] == key], float)   # 1q decay, known from stated 1q figures
         ys = np.array([c.get('00', 0) / sum(c.values()) for c, m in zip(counts, meta) if m[0] == key], float)
         best = None
-        for A in np.linspace(0.55, 0.75, 41):
+        for A in np.linspace(0.55, 0.80, 51):
             r = np.linspace(0.90, 1.0, 2001)
-            sse = ((0.25 + A * r[:, None] ** xs[None, :] - ys[None, :]) ** 2).sum(1); i = int(sse.argmin())
+            sse = ((0.25 + A * f1[None, :] * r[:, None] ** xs[None, :] - ys[None, :]) ** 2).sum(1); i = int(sse.argmin())
             if best is None or sse[i] < best[0]: best = (sse[i], r[i])
         out[key] = float(0.75 * (1 - best[1]))
     return out
@@ -174,7 +194,7 @@ def show_plan(name, tc, pairs, qubits, st2, chosen, when):
     for p, n in sorted(pairs.items(), key=lambda x: -x[1]):
         k = '%d-%d' % p; s = st2.get(k)
         print('  %-10s %5d   %16s   %s' % (k, n, '-' if s is None else '%.5f' % s, 'yes' if p in chosen else 'no (MYCIRCUIT_MAX_PAIRS)'))
-    print('\n  signal kept by the two-qubit gates, from IBM\'s stated figures: %.3f   (rough guide, see the note in the help)' % keep(pairs, st2))
+    print('\n  signal kept by the two-qubit gates, from IBM\'s stated figures: %.3f   (depolarizing-model estimate, see the help)' % keep(pairs, st2))
 
 
 def run(cmd, path, name, yes=False, fake=None, opt=1):
@@ -232,35 +252,53 @@ def run(cmd, path, name, yes=False, fake=None, opt=1):
 
 
 def analyze(st):
-    meas = rb_fit(st['rb_counts'], st['meta']); ci = rb_ci(st['rb_counts'], st['meta']); s2 = st['stated2']; pairs = {tuple(map(int, k.split('-'))): n for k, n in st['pairs'].items()}
+    meas = rb_fit(st['rb_counts'], st['meta']); ci, draws = rb_ci(st['rb_counts'], st['meta']); s2 = st['stated2']; pairs = {tuple(map(int, k.split('-'))): n for k, n in st['pairs'].items()}
     print('YOUR CIRCUIT\'S GATES on %s, checked %s on your own account (jobs %s, %s).' % (st['backend'], st['fired'], st['rb_job'], st['ro_job']))
     if st.get('stated_when'): print("Against IBM's published figures dated %s." % st['stated_when'])
     print('\n  pair        uses   IBM stated   measured today (99% interval)       ratio (99% interval)')
     flags = 0
     for k in sorted(meas, key=lambda k: -st['pairs'][k]):
         s = s2.get(k); m = meas[k]; lo, hi = ci[k]; r = (m / s) if s else None
-        # flagged only when the whole 99% interval sits past the margin: WORSE if lo/s > FLAG_HI, better if hi/s < FLAG_LO
+        # flagged only when the whole 99% interval sits above the margin (lo/s > FLAG_HI); FLAG_LO is kept for the record, no 'better' flag
         f = ''
-        if s and lo is not None:
-            if lo / s > FLAG_HI: f = '  WORSE than stated'
-            elif hi / s < FLAG_LO: f = '  better than stated'
-        flags += bool(f)
+        floor = lo is not None and lo <= RESOLVE   # interval reaches zero: this check cannot resolve the pair's error, so no flag either way
+        if floor: f = '  below what this check resolves'
+        elif s and lo is not None:
+            if lo / s > FLAG_HI: f = '  WORSE than stated'   # 27 Nov (Sage): WORSE is the only flag; a low ratio prints with no flag
+        flags += bool(f) and not floor
         iv = '' if lo is None else '[%.5f, %.5f]' % (lo, hi); rv = '' if (r is None or lo is None) else '%.2fx [%.2f, %.2f]' % (r, lo / s, hi / s)
         print('  %-10s %5d   %10s   %.5f %-20s   %s%s' % (k, st['pairs'][k], '-' if s is None else '%.5f' % s, m, iv, rv, f))
     c0, c1 = st['ro_counts']; n = len(st['qubits']); shots = sum(c0.values())
-    print('\n  qubit   read 1 when 0: stated / today     read 0 when 1: stated / today')
+    print('\n  qubit   read 1 when 0: IBM stated / today (99% interval)      read 0 when 1: IBM stated / today (99% interval)')
     rflags = 0
     for i, q in enumerate(st['qubits']):
-        p01 = sum(v for b, v in c0.items() if b[::-1][i] == '1') / shots; p10 = sum(v for b, v in c1.items() if b[::-1][i] == '0') / shots
+        k01 = sum(v for b, v in c0.items() if b[::-1][i] == '1'); k10 = sum(v for b, v in c1.items() if b[::-1][i] == '0')
         r = st['stated_ro'][str(q)]; a, b = r.get('p01'), r.get('p10')
-        bad = (a is not None and p01 > max(2 * a, a + 0.01)) or (b is not None and p10 > max(2 * b, b + 0.01))
+        (l01, h01), (l10, h10) = clopper(k01, shots), clopper(k10, shots)
+        # one-way against one-way (prob_meas1_prep0, prob_meas0_prep1); flagged only when the whole interval clears max(2x stated, stated + 0.01)
+        bad = (a is not None and l01 > max(2 * a, a + 0.01)) or (b is not None and l10 > max(2 * b, b + 0.01))
         rflags += bad
-        print('  %5d   %8s / %.4f              %8s / %.4f%s' % (q, '-' if a is None else '%.4f' % a, p01, '-' if b is None else '%.4f' % b, p10, '   WORSE than stated' if bad else ''))
-    mfull = {k: meas.get(k, s2.get(k)) for k in s2}
-    ks, km = keep(pairs, s2), keep(pairs, mfull)
-    print('\n  signal kept by your two-qubit gates:  from IBM\'s stated figures %.3f   from today\'s measurement %.3f' % (ks, km))
-    print('  (pairs not checked keep IBM\'s stated figure in the second number)')
-    print('\nRESULT: %d of %d checked pairs (whole 99%% interval past %.2fx or under %.2fx of IBM\'s figure) and %d of %d qubits read differently from IBM\'s published figures today.'
-          % (flags, len(meas), FLAG_HI, FLAG_LO, rflags, n))
-    print('Benchmarking gives the average error per gate on each pair. It does not predict exactly how far your circuit\'s answer moves.')
+        print('  %5d   %8s / %.4f [%.4f, %.4f]          %8s / %.4f [%.4f, %.4f]%s' % (q, '-' if a is None else '%.4f' % a, k01 / shots, l01, h01,
+              '-' if b is None else '%.4f' % b, k10 / shots, l10, h10, '   WORSE than stated' if bad else ''))
+    nb = min(len(v) for v in draws.values())
+    km_draws = [keep(pairs, {k: (draws[k][j] if k in draws else s2.get(k)) for k in s2}) for j in range(nb)]
+    ks, km = keep(pairs, s2), keep(pairs, {k: meas.get(k, s2.get(k)) for k in s2})
+    print('\n  Depolarizing-model estimate of the signal your two-qubit gates keep (product of 1 - 4e/3 over the gates; ignores single-qubit error,')
+    print('  readout, coherent error and crosstalk):  from IBM\'s stated figures %.3f   from today\'s measurement %.3f [%.3f, %.3f] (99%%)'
+          % (ks, km, np.percentile(km_draws, 0.5), np.percentile(km_draws, 99.5)))
+    print('  %d of %d pairs your circuit uses were measured. Any others keep IBM\'s stated figure in the second number.' % (len(meas), len(st['pairs'])))
+    print('\nRESULT: %d of %d checked pairs (whole 99%% interval above %.2fx of IBM\'s figure, flagged WORSE) and %d of %d qubits read differently from IBM\'s published figures today.'
+          % (flags, len(meas), FLAG_HI, rflags, n))
+    print('Up to %d pairs are checked, each at 99%%, so across many pairs one flag can be chance. Pairs with an interval that straddles the margin are not flagged.' % MAX_PAIRS)
+    print('Benchmarking gives the average error per gate on each pair, on the pairs measured, at the hour measured. It does not predict exactly how far your circuit\'s answer moves.')
+    print('Your circuit stays on this machine. The check\'s results are on your IBM account and here, and nothing goes to Heuremen.')
+    print('On hardware this check has read most pairs below IBM\'s figure. That is not yet explained, so a low ratio is not flagged.')
+    print('The 99% interval covers sampling within this check, not change between checks. A repeat minutes later has differed by more.')
     print('The jobs are on your IBM account, so anyone you show this to can look them up.')
+
+
+def clopper(k, n, conf=0.99):
+    from scipy.stats import beta
+    a = (1 - conf) / 2
+    lo = 0.0 if k == 0 else float(beta.ppf(a, k, n - k + 1)); hi = 1.0 if k == n else float(beta.ppf(1 - a, k + 1, n - k))
+    return lo, hi

@@ -1,0 +1,28 @@
+YOUR CIRCUIT'S GATES on ibm_kingston, checked 2026-11-27T14:03:59Z on your own account (jobs dc4orjmq4uuc73a9777g, dc4orjqnj2vs73dkfop0).
+Against IBM's published figures dated 2026-11-27T08:27:17-05:00.
+
+  pair        uses   IBM stated   measured today (99% interval)       ratio (99% interval)
+  0-1            1      0.00446   0.00289 [0.00157, 0.00334]     0.65x [0.35, 0.75]  better than stated
+  1-2            1      0.00081   0.00172 [0.00109, 0.00210]     2.14x [1.35, 2.60]  WORSE than stated
+  2-3            1      0.00121   0.00120 [0.00056, 0.00206]     0.99x [0.46, 1.70]
+  3-4            1      0.00176   0.00255 [0.00169, 0.00397]     1.45x [0.96, 2.26]
+  4-5            1      0.00205   0.00221 [0.00075, 0.00356]     1.08x [0.37, 1.74]
+  5-6            1      0.00300   0.00334 [0.00135, 0.00506]     1.11x [0.45, 1.69]
+  6-7            1      0.00856   0.00900 [0.00514, 0.01031]     1.05x [0.60, 1.20]
+
+  qubit   read 1 when 0: stated / today     read 0 when 1: stated / today
+      0     0.0227 / 0.0075                0.0171 / 0.0175
+      1     0.0049 / 0.0005                0.0088 / 0.0155
+      2     0.0059 / 0.0095                0.0144 / 0.0135
+      3     0.0007 / 0.0045                0.0137 / 0.0160
+      4     0.0071 / 0.0135                0.0117 / 0.0185
+      5     0.0010 / 0.0055                0.0088 / 0.0115
+      6     0.0022 / 0.0010                0.0071 / 0.0065
+      7     0.0056 / 0.0055                0.0144 / 0.0135
+
+  signal kept by your two-qubit gates:  from IBM's stated figures 0.971   from today's measurement 0.970
+  (pairs not checked keep IBM's stated figure in the second number)
+
+RESULT: 2 of 7 checked pairs (whole 99% interval past 1.25x or under 0.80x of IBM's figure) and 0 of 8 qubits read differently from IBM's published figures today.
+Benchmarking gives the average error per gate on each pair. It does not predict exactly how far your circuit's answer moves.
+The jobs are on your IBM account, so anyone you show this to can look them up.
