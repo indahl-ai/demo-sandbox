@@ -402,11 +402,12 @@ def fire(backend, yes=False, time_unknown_ok=False):
     p = pubs(be, qs); props = be.properties(refresh=True).to_dict()
     sm = SamplerV2(mode=be); sm.options.environment.job_tags = [TAG]
     j = sm.run(p); jid = j.job_id(); now = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    print('Submitted on your account: job %s.' % jid)
     if os.path.exists(state_path(backend)):
         print('Note: this replaces the saved local state of your previous check (job %s). That job stays on your IBM account.' % json.load(open(state_path(backend))).get('job_id'))
     json.dump(dict(backend=backend, job_id=jid, sent=now, qubits=qs, props_at_send=props), open(state_path(backend), 'w'), default=str)
-    print('Submitted on your account: job %s, %d qubits.\nNext: python sandbox.py owner analyze --backend %s   (run again every 30 s or so until it prints the table)'
-          % (jid, len(qs), backend))
+    print('%d qubits.\nNext: python sandbox.py owner analyze --backend %s   (run again every 30 s or so until it prints the table)'
+          % (len(qs), backend))
 
 
 def analyze(backend):
@@ -418,7 +419,10 @@ def analyze(backend):
         print('job %s: %s. Not finished yet. Run analyze again in about 30 seconds.' % (st['job_id'], s)); return
     m = j.metrics(); ts = m.get('timestamps') or {}
     if not ts.get('running') or not ts.get('finished'): sys.exit('job %s: IBM returned no run timestamps yet. Run analyze again in a minute.' % st['job_id'])
-    win = [str(ts['running'])[:19] + 'Z', str(ts['finished'])[:19] + 'Z']
+    def _z(v):
+        t = v if isinstance(v, dt.datetime) else dt.datetime.fromisoformat(str(v).replace('Z', '+00:00'))
+        return (t.astimezone(dt.timezone.utc) if t.tzinfo else t).strftime('%Y-%m-%dT%H:%M:%S') + 'Z'
+    win = [_z(ts['running']), _z(ts['finished'])]
     try: run_props = svc.backend(backend).properties(datetime=dt.datetime.fromisoformat(win[0].replace('Z', '+00:00'))).to_dict()
     except Exception: run_props = None
     if not run_props:
@@ -447,11 +451,12 @@ def show_own(res, path=None):
     r = as_run(res)
     t = report({res['processor']: [r]}, 'YOUR MACHINE %s, job %s on your own account: our calibration check against IBM\'s record in force at the job start.'
                % (res['processor'], res['job_id']),
-               'Known-good seat: %s (median measured/stated readout %.3f, T1 %.3f). IBM\'s readout figures read as counts out of %d shots.'
-               % (res['known_good'], res['median_readout_measured_over_stated'], res['median_t1_measured_over_stated'], res['ibm_readout_shots']), one_run=True)
+               'Known-good seat: %s (median measured/stated readout %.3f, T1 %.3f). IBM\'s readout figures read as counts out of %d shots%s.'
+               % (res['known_good'], res['median_readout_measured_over_stated'], res['median_t1_measured_over_stated'], res['ibm_readout_shots'],
+                  ' (inferred from the figures: a figure IBM counted on 1,024 shots would get too narrow an interval here and be called off more readily)' if res['ibm_readout_shots'] == 4096 else ''), one_run=True)
     s = t[res['processor']]
     print('RESULT: %d of %d qubits on %s read off IBM\'s readout record in this run, worse than stated (%.1f%%).' % (s['off'], s['readings'], res['processor'], pct(s['off'], s['readings'])))
-    pl = point_figure_line(res['qubits'], res['ibm_readout_shots'])
+    pl = point_figure_line(res['qubits'], res['ibm_readout_shots']) if res.get('known_good') != 'failed' else None
     if pl: print(pl)
     print('One run is a few minutes of one machine. The record IBM publishes changes, and so does the machine: a record of your own needs repeat runs.')
     if path: print('Saved: %s  (the same shape as our published files. The job ID opens the raw counts on your IBM account)' % path)
