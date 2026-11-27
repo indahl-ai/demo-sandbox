@@ -159,3 +159,9 @@ def test_utc_handles_eastern_dst_and_offsets():
     assert B.utc('2026-11-02 12:00:00') == '2026-11-02T17:00Z'
     assert B.utc('2026-11-27 01:12:52-05:00') == '2026-11-27T06:12Z'
     assert B.utc('2026-11-27T06:12Z') == '2026-11-27T06:12Z'
+
+
+def test_owner_fire_parses_time_unknown_ok():
+    env = dict(os.environ); env.pop('IBM_QUANTUM_TOKEN', None)
+    r = subprocess.run([sys.executable, 'sandbox.py', 'owner', 'fire', '--backend', 'ibm_cleveland', '--time-unknown-ok'], cwd=HERE, capture_output=True, text=True, timeout=120, env=env)
+    assert 'unrecognized arguments' not in r.stderr and 'add --yes' in r.stderr
