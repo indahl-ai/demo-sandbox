@@ -10,8 +10,8 @@ sequences on the two-qubit pairs your layout uses, and an all-0 / all-1 readout 
 Add --fake kingston|fez|marrakesh to `plan` to try it offline on a stand-in chip, with no key.
 
 What it measures, and what it does not: randomized benchmarking gives the AVERAGE error per two-qubit gate on each pair, today. It does not
-predict exactly how far your circuit's answer moves. The "signal kept" lines multiply (1 - 4e/3) over your circuit's two-qubit gates, a rough
-guide that ignores single-qubit gates, idling and crosstalk.
+predict exactly how far your circuit's answer moves. The "signal kept" lines are a depolarizing-model estimate: they multiply (1 - 4e/3) over
+your circuit's two-qubit gates and ignore single-qubit error, readout, idling, coherent error and crosstalk.
 """
 import os, sys, json, time, random, hashlib
 import numpy as np
@@ -287,14 +287,14 @@ def analyze(st):
     print('  readout, coherent error and crosstalk):  from IBM\'s stated figures %.3f   from today\'s measurement %.3f [%.3f, %.3f] (99%%)'
           % (ks, km, np.percentile(km_draws, 0.5), np.percentile(km_draws, 99.5)))
     print('  %d of %d pairs your circuit uses were measured. Any others keep IBM\'s stated figure in the second number.' % (len(meas), len(st['pairs'])))
-    print('\nRESULT: %d of %d checked pairs (whole 99%% interval above %.2fx of IBM\'s figure, flagged WORSE) and %d of %d qubits read differently from IBM\'s published figures today.'
+    print('\nRESULT: %d of %d checked pairs (whole 99%% interval above %.2fx of IBM\'s figure, flagged WORSE) and %d of %d qubits read worse than IBM\'s published figures today (whole 99%% interval above twice the figure, or the figure plus 0.01).'
           % (flags, len(meas), FLAG_HI, rflags, n))
-    print('Up to %d pairs are checked, each at 99%%, so across many pairs one flag can be chance. Pairs with an interval that straddles the margin are not flagged.' % MAX_PAIRS)
+    print('Up to %d pairs are checked, so across many pairs one flag can be chance. Pairs whose interval straddles the margin are not flagged.' % MAX_PAIRS)
     print('Benchmarking gives the average error per gate on each pair, on the pairs measured, at the hour measured. It does not predict exactly how far your circuit\'s answer moves.')
     print('Your circuit stays on this machine. The check\'s results are on your IBM account and here, and nothing goes to Heuremen.')
     print('On hardware this check has read most pairs below IBM\'s figure. That is not yet explained, so a low ratio is not flagged.')
     print('The interval is labelled 99%. In a simulator test with known answers it covered the truth 92 times in 100. It covers sampling within this check, not change between checks. A repeat minutes later has differed by more.')
-    print('The jobs are on your IBM account, so anyone you show this to can look them up.')
+    print('The job IDs are on your IBM account. Anyone with access to that account can open the raw results behind every number above.')
 
 
 def clopper(k, n, conf=0.99):
