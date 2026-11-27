@@ -64,11 +64,11 @@ PASS 54 of 54
 Until 24 Nov 2026 the page carried 10.96x (marrakesh run 1, 40 qubits, in two tables) and 6.47x (fez run 2, 40 qubits). Those three cells did not match the replay (10.99x, 6.48x). The page now carries the replayed figures, as in the table above.
 
 ## How the shot bill is computed
-The published shot bill uses a gate-only reading that includes IBM's single-qubit gate errors: S = readout x (CZ fade x single-qubit fade + uniform term), single-qubit fade = product over every sx and x gate of (1 - recorded error), binomial bill (S/A)(1-0.5A)/(1-0.5S). The single-qubit gate counts come from rebuilding the circuits on the stand-in chip.
+The published shot bill uses a record-implied S that includes IBM's single-qubit gate errors: S = readout x (CZ fade x single-qubit fade + uniform term), single-qubit fade = product over every sx and x gate of (1 - recorded error), binomial bill (S/A)(1-0.5A)/(1-0.5S). The single-qubit gate counts come from rebuilding the circuits on the stand-in chip.
 
 ## What the recorded files add
 The analysis in the original script reads a live backend record at analysis time. That record is not saved with the runs. For each chip it was recovered read-only from IBM's calibration history (the record whose update time equals the stamp saved with each run) and saved into every recorded state file under the key `record` (symmetric and one-way readout errors, single-qubit and CZ gate errors). Both runs on a chip share one stamp. Replay is then fully offline. Billed QPU seconds per job are saved under `billed_qpu_seconds`.
-Cross-checks that hold: the recovered kingston readout figures match the values printed in the original analysis file (for example q105), and the readout flags and gate-only readings published for kingston reproduce from it. The saved gate-only reading S was not recomputed from the recovered CZ errors.
+Cross-checks that hold: the recovered kingston readout figures match the values printed in the original analysis file (for example q105), and the readout flags and record-implied Ss published for kingston reproduce from it. The saved record-implied S S was not recomputed from the recovered CZ errors.
 
 ## Other points
 - Layouts: the circuits are rebuilt on a stand-in chip with the saved layout, and the replay refuses to proceed unless the CZ count and CZ pairs match the recorded ones (they match at every size on every chip and run). The single-qubit gate counts come from that rebuild.
@@ -77,3 +77,5 @@ Cross-checks that hold: the recovered kingston readout figures match the values 
 - ESTIMATE_SECONDS = 23.2 (the code's own estimate per chip; fire multiplies by 1.25 and refuses above a 60 s cap or the remaining time).
 - No library beyond qiskit, qiskit-ibm-runtime, numpy and scipy is needed.
 - fire needs `yes=True` / `--yes`. No job was submitted while building this.
+
+- 27 Nov 2026 (Sage): "gate-only reading" renamed "record-implied S" above, matching the code and page. IBM's plan includes readout (and, in the bill, single-qubit) errors, so "gate-only" was a false label.
