@@ -189,6 +189,7 @@ def my_circuit(argv):
     ap.add_argument('--fake', choices=sorted(CHIPS), help='plan only: a stand-in chip, offline, no key')
     ap.add_argument('--opt', type=int, default=1, choices=(0, 1, 2, 3), help='transpiler optimization level for the layout (default 1)')
     ap.add_argument('--yes', action='store_true')
+    ap.add_argument('--time-unknown-ok', action='store_true', help='fire only: proceed when IBM does not report remaining time for the instance')
     a = ap.parse_args(argv)
     sys.path.insert(0, os.path.join(HERE, 'my_circuit')); import check_circuit as C
     return C.run(a.cmd, a.file, a.backend, yes=a.yes, fake=a.fake, opt=a.opt)
@@ -204,7 +205,7 @@ def owner(argv):
     ap.add_argument('--yes', action='store_true')
     a = ap.parse_args(argv)
     sys.path.insert(0, os.path.join(HERE, 'owner')); import owner_check as O
-    return O.run(a.cmd, family=a.family, backend=a.backend, yes=a.yes)
+    return O.run(a.cmd, family=a.family, backend=a.backend, yes=a.yes, time_unknown_ok=a.time_unknown_ok)
 
 
 def _main():

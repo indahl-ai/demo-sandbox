@@ -139,3 +139,15 @@ def test_check_and_fire_refusal_with_a_stand_in_account(monkeypatch, capsys):
     assert '156 qubits' in out and 'about 4 s' in out and 'Nothing was submitted' in out and 'fire refuses below 34 s' in out
     with pytest.raises(SystemExit) as e: O.fire('ibm_cleveland', yes=True)
     assert 'refusing' in str(e.value)
+
+
+def test_fire_refuses_when_remaining_time_unknown(monkeypatch):
+    class B:
+        num_qubits = 2
+    class Svc:
+        def backend(self, n): return B()
+    monkeypatch.setattr(O, 'service', lambda: Svc())
+    monkeypatch.setattr(O, 'usable', lambda be: [0, 1])
+    monkeypatch.setattr(O, 'remaining', lambda svc: None)
+    with pytest.raises(SystemExit) as e: O.fire('ibm_cleveland', yes=True)
+    assert 'time-unknown-ok' in str(e.value)

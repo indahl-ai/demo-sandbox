@@ -384,9 +384,11 @@ def check(backend):
     print('\nNothing was submitted. To run it: python sandbox.py owner fire --backend %s --yes' % backend)
 
 
-def fire(backend, yes=False):
+def fire(backend, yes=False, time_unknown_ok=False):
     if not yes: sys.exit('This submits jobs on your IBM account and uses your IBM time. Run "check" first, then add --yes to fire.')
     svc = service(); be = svc.backend(backend); qs = usable(be); left = remaining(svc)
+    if left is None and not time_unknown_ok:   # fail closed (27 Nov 2026, Sage): dedicated and contract instances may not report remaining time
+        sys.exit('refusing: IBM does not report remaining time for this instance. If your plan has time for about %d s, add --time-unknown-ok to fire.' % BILLED_S)
     if left is not None and left < BILLED_S + SPARE_S:
         sys.exit('refusing: %.0f s of IBM time left, the check needs about %d s plus %d s to spare' % (left, BILLED_S, SPARE_S))
     from qiskit_ibm_runtime import SamplerV2
@@ -431,9 +433,9 @@ def show_own(res, path=None):
     print('Nothing goes to Heuremen.')
 
 
-def run(cmd, family='heron_r2', backend=None, yes=False):
+def run(cmd, family='heron_r2', backend=None, yes=False, time_unknown_ok=False):
     if cmd == 'history': return history(family)
     if not backend: sys.exit('name your machine: --backend <name>, for example --backend ibm_cleveland')
     if cmd == 'check': return check(backend)
-    if cmd == 'fire': return fire(backend, yes=yes)
+    if cmd == 'fire': return fire(backend, yes=yes, time_unknown_ok=time_unknown_ok)
     if cmd == 'analyze': return analyze(backend)
