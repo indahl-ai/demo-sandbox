@@ -15,7 +15,7 @@ Nothing else is changed. Numbers are copied as published."""
 import os, sys, json, glob, gzip, datetime as dt
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-FAMILY_CHIPS = {'heron_r2': ('ibm_fez', 'ibm_kingston', 'ibm_marrakesh'), 'nighthawk_r2': ('ibm_phoenix', 'ibm_chicago')}
+FAMILY_CHIPS = {'heron_r2': ('ibm_fez', 'ibm_kingston', 'ibm_marrakesh'), 'nighthawk_r2': ('ibm_phoenix', 'ibm_chicago'), 'heron_r3': ('ibm_boston', 'ibm_pittsburgh', 'ibm_aachen')}
 CHIPS = FAMILY_CHIPS['heron_r2']
 OUT = {'ABOVE': 'A', 'BELOW': 'B', 'CONSISTENT': 'C', 'CANNOT_TELL': 'T'}
 DST_END = dt.datetime(2026, 11, 1, 6, 0, tzinfo=dt.timezone.utc)

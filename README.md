@@ -23,7 +23,7 @@ On RunPod the template does this for you. Setup takes about a minute after the p
 
 Elsewhere: `git clone https://github.com/indahl-ai/demo-sandbox && cd demo-sandbox && bash start.sh && source .venv/bin/activate`
 
-Releases are tagged. The public RunPod template also clones release tag `v1.5`. On RunPod, open the pod's web terminal (Connect, then Start Web Terminal) and run `cd /workspace/demo && .venv/bin/python sandbox.py owner history`, or the owner check with `--backend` set to your machine. The notebook (`QIA_demonstrations.ipynb`, for Colab and hosted sandboxes) clones release tag `v1.5`, a fixed commit, never the moving `main`. To use the same code here: `git clone --branch v1.5 https://github.com/indahl-ai/demo-sandbox`.
+Releases are tagged. The public RunPod template also clones release tag `v1.6`. On RunPod, open the pod's web terminal (Connect, then Start Web Terminal) and run `cd /workspace/demo && .venv/bin/python sandbox.py owner history`, or the owner check with `--backend` set to your machine. The notebook (`QIA_demonstrations.ipynb`, for Colab and hosted sandboxes) clones release tag `v1.6`, a fixed commit, never the moving `main`. To use the same code here: `git clone --branch v1.6 https://github.com/indahl-ai/demo-sandbox`.
 
 ## Step 2: replay a recorded result. No key, no network, no IBM time.
     python sandbox.py chemistry replay
@@ -72,6 +72,7 @@ An independent record of a dedicated IBM machine's readout and T1, measured on t
 
     python sandbox.py owner history --family heron_r2
     python sandbox.py owner history --family nighthawk_r2
+    python sandbox.py owner history --family heron_r3
 
 Replays the calibration readings Heuremen has published for ibm_fez, ibm_kingston and ibm_marrakesh since 30 Oct 2026 (Heron r2), or for ibm_phoenix and ibm_chicago (Nighthawk r2, whose map is printed by qubit number), from a read-only extract in `owner/recorded/`. Each reading names its published file, `https://quantumidleaudit.com/qia/cal/<file>.json`. Per chip it prints the runs and qubit readings, the readout readings that read off IBM's record (worse than stated), the distinct qubits that did so at least once, the readings at 10x IBM's figure or more, the age of IBM's readout record when each run started, the ten worst single readings, and a qubit map. The headline counts are readout only. T1 is printed apart, both ways.
 

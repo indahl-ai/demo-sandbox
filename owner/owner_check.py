@@ -20,7 +20,7 @@ import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-FAMILIES = {f: os.path.join(HERE, 'recorded', f + '.jsonl.gz') for f in ('heron_r2', 'nighthawk_r2')}   # nighthawk_r2: ibm_phoenix, ibm_chicago
+FAMILIES = {f: os.path.join(HERE, 'recorded', f + '.jsonl.gz') for f in ('heron_r2', 'nighthawk_r2', 'heron_r3')}   # nighthawk_r2: ibm_phoenix, ibm_chicago
 PUBLISHED = 'https://quantumidleaudit.com/qia/cal/%s.json'
 SRO, ST1 = 1000, 500                                     # shots: readout circuits, each T1 delay (qia_cal/cal.py)
 BILLED_S = 4                                             # IBM billed 4 s for every one of the 2,171 calibration jobs in our record as of 27 Nov 2026 (120 and 156 qubits)
@@ -179,6 +179,9 @@ def hours(h):
     return '%.1f h' % h if h < 48 else '%.1f days' % (h / 24)
 
 
+HERON_R2_CHIPS = ('ibm_fez', 'ibm_kingston', 'ibm_marrakesh')
+
+
 def heron_r2_rows(n):
     """Heron r2 (156 qubits): eight rows of 16 qubits, joined by four bridge qubits after each of the first seven rows. Row r holds qubits
     20r..20r+15, its bridges 20r+16..20r+19 sit under columns 3, 7, 11, 15 (even r) or 1, 5, 9, 13 (odd r). Checked against IBM's coupling map."""
@@ -237,7 +240,7 @@ def report(by_chip, title, source_note, one_run=False):
         if not s['worst']: print('    none')
         print('\n  qubit map: % of runs in which each qubit\'s readout read off IBM\'s record ("." never, "<1" under 1%)' if not one_run else
               '\n  qubit map: qubits whose readout read off IBM\'s record in this run ("100"), "." where it did not')
-        qubit_map(s['per_qubit'], s['runs'], nq)
+        qubit_map(s['per_qubit'], s['runs'], nq if chip in HERON_R2_CHIPS else -1)   # the drawn layout is checked against Heron r2 only
         print()
     return totals
 

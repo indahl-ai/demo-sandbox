@@ -199,7 +199,7 @@ def owner(argv):
     check, fire and analyze run the same calibration check on THEIR machine, on their own key (owner/owner_check.py)."""
     ap = argparse.ArgumentParser(prog='sandbox.py owner', description='An independent record of an IBM machine\'s readout and T1.')
     ap.add_argument('cmd', choices=['history', 'check', 'fire', 'analyze'])
-    ap.add_argument('--family', default='heron_r2', help='history only: heron_r2 (ibm_fez, ibm_kingston, ibm_marrakesh) or nighthawk_r2 (ibm_phoenix, ibm_chicago)')
+    ap.add_argument('--family', default='heron_r2', help='history only: heron_r2 (ibm_fez, ibm_kingston, ibm_marrakesh) nighthawk_r2 (ibm_phoenix, ibm_chicago) or heron_r3 (ibm_boston, ibm_pittsburgh, ibm_aachen)')
     ap.add_argument('--backend', help='check, fire, analyze: any IBM processor your account can use, e.g. ibm_cleveland')
     ap.add_argument('--yes', action='store_true')
     ap.add_argument('--time-unknown-ok', action='store_true', help='fire only: proceed when IBM does not report remaining time for the instance')

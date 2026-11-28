@@ -6,7 +6,7 @@ import subprocess, sys, os, nbformat as nbf
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 REPO = 'https://github.com/indahl-ai/demo-sandbox'
-TAG = 'v1.5'          # the notebook clones this release tag (a fixed commit), never moving main; the tag must point at a commit holding this notebook
+TAG = 'v1.6'          # the notebook clones this release tag (a fixed commit), never moving main; the tag must point at a commit holding this notebook
 md = nbf.v4.new_markdown_cell
 code = nbf.v4.new_code_cell
 
@@ -79,7 +79,7 @@ else:
     if res is not None and res.returncode: print('Last analyze error output:'); print(res.stderr[-3000:])"""),
 md("""## For machine owners
 An independent record of an IBM machine's readout and T1. First, our own published calibration readings of IBM's public chips of one family, replayed here: Heron r2 (ibm_fez, ibm_kingston, ibm_marrakesh, since 30 Oct 2026) or Nighthawk r2 (ibm_phoenix, ibm_chicago). Set `FAMILY` in the cell. No key, no network. Each reading names its published file at quantumidleaudit.com/qia/cal/."""),
-code("""FAMILY = os.environ.get('QIA_FAMILY', 'heron_r2')   # 'heron_r2' (ibm_fez, ibm_kingston, ibm_marrakesh) or 'nighthawk_r2' (ibm_phoenix, ibm_chicago)
+code("""FAMILY = os.environ.get('QIA_FAMILY', 'heron_r2')   # 'heron_r2' (ibm_fez, ibm_kingston, ibm_marrakesh), 'heron_r3' (ibm_boston, ibm_pittsburgh, ibm_aachen) or 'nighthawk_r2' (ibm_phoenix, ibm_chicago)
 if os.environ.get('QIA_PREPARED_FOR'): print('Prepared for %s.' % os.environ['QIA_PREPARED_FOR'])
 sandbox('owner', 'history', '--family', FAMILY)"""),
 md("""### The same check on your own machine
